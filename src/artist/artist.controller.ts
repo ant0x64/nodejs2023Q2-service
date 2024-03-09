@@ -43,10 +43,10 @@ export class ArtistController {
   @Put(':id')
   update(
     @Param('id', UUIDPipe) id: string,
-    @Body() updateArtistPasswordDto: UpdateArtistDto,
+    @Body() updateArtistDto: UpdateArtistDto,
   ) {
     this.findOne(id);
-    return this.artistService.update(id, updateArtistPasswordDto);
+    return this.artistService.update(id, updateArtistDto);
   }
 
   @Delete(':id')

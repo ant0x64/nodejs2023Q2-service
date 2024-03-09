@@ -43,10 +43,10 @@ export class TrackController {
   @Put(':id')
   update(
     @Param('id', UUIDPipe) id: string,
-    @Body() updateTrackPasswordDto: UpdateTrackDto,
+    @Body() updateTrackDto: UpdateTrackDto,
   ) {
     this.findOne(id);
-    return this.trackService.update(id, updateTrackPasswordDto);
+    return this.trackService.update(id, updateTrackDto);
   }
 
   @Delete(':id')

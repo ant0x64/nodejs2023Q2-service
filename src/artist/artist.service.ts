@@ -8,11 +8,11 @@ import { Artist } from './entities/artist.entity';
 @Injectable()
 export class ArtistService {
   private items: Record<Artist['id'], Artist> = {
-    '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5': new Artist({
-      id: '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5',
-      name: 'test',
-      grammy: false,
-    }),
+    // '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5': new Artist({
+    //   id: '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5',
+    //   name: 'test',
+    //   grammy: false,
+    // }),
   };
 
   create(createArtistDto: CreateArtistDto): Artist {

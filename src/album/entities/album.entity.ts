@@ -1,4 +1,12 @@
-import { IsUUID, IsString, IsNotEmpty, IsDate } from 'class-validator';
+import {
+  IsUUID,
+  IsString,
+  IsNotEmpty,
+  IsInt,
+  Min,
+  Max,
+  IsOptional,
+} from 'class-validator';
 import { Artist } from 'src/artist/entities/artist.entity';
 
 export class Album {
@@ -9,10 +17,14 @@ export class Album {
   @IsNotEmpty()
   name: string;
 
-  @IsDate()
+  @IsInt()
+  @Min(1900)
+  @Max(new Date().getFullYear())
   year: number;
 
-  artistId: Pick<Artist, 'id'> | null;
+  @IsUUID(4)
+  @IsOptional()
+  artistId: Pick<Artist, 'id'> | null = null;
 
   constructor(data: Partial<Album>) {
     Object.assign(this, data);
