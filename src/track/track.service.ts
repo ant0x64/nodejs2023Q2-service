@@ -8,13 +8,13 @@ import { Track } from './entities/track.entity';
 @Injectable()
 export class TrackService {
   private items: Record<Track['id'], Track> = {
-    '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5': new Track({
-      id: '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5',
-      name: 'test',
-      artistId: null,
-      albumId: null,
-      duration: 100,
-    }),
+    // '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5': new Track({
+    //   id: '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5',
+    //   name: 'test',
+    //   artistId: null,
+    //   albumId: null,
+    //   duration: 100,
+    // }),
   };
 
   create(createTrackDto: CreateTrackDto): Track {

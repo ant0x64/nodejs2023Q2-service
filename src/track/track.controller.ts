@@ -10,7 +10,6 @@ import {
   HttpCode,
   NotFoundException,
   Put,
-  ForbiddenException,
 } from '@nestjs/common';
 import { UUIDPipe } from 'src/common/pipes/uuid.pipe';
 import { TrackService } from './track.service';
