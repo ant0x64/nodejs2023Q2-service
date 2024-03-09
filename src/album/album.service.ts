@@ -9,19 +9,23 @@ import { ArtistService } from 'src/artist/artist.service';
 
 @Injectable()
 export class AlbumService {
-  private items: Record<Album['id'], Album> = {
-    // '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5': new Album({
-    //   id: '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5',
-    //   name: 'test',
-    //   year: 2000,
-    //   artistId: null,
-    // }),
-  };
+  private items: Record<Album['id'], Album> = {};
 
   constructor(
     private trackService: TrackService,
     private artistService: ArtistService,
-  ) {}
+  ) {
+    this.artistService.deleteArtist$.subscribe((artistId) => {
+      Object.values(this.items).forEach((album) => {
+        if (artistId !== album.artistId) {
+          return;
+        }
+        this.update(album.id, {
+          artistId: null,
+        });
+      });
+    });
+  }
 
   create(createAlbumDto: CreateAlbumDto): Album {
     const id = uuid();

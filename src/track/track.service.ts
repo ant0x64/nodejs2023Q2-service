@@ -4,18 +4,24 @@ import { v4 as uuid } from 'uuid';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/track.entity';
+import { ArtistService } from 'src/artist/artist.service';
 
 @Injectable()
 export class TrackService {
-  private items: Record<Track['id'], Track> = {
-    // '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5': new Track({
-    //   id: '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5',
-    //   name: 'test',
-    //   artistId: null,
-    //   albumId: null,
-    //   duration: 100,
-    // }),
-  };
+  private items: Record<Track['id'], Track> = {};
+
+  constructor(private artistService: ArtistService) {
+    this.artistService.deleteArtist$.subscribe((artistId) => {
+      Object.values(this.items).forEach((album) => {
+        if (artistId !== album.artistId) {
+          return;
+        }
+        this.update(album.id, {
+          artistId: null,
+        });
+      });
+    });
+  }
 
   create(createTrackDto: CreateTrackDto): Track {
     const id = uuid();

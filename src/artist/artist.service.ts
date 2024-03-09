@@ -5,15 +5,14 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './entities/artist.entity';
 
+import { Subject } from 'rxjs';
+
 @Injectable()
 export class ArtistService {
-  private items: Record<Artist['id'], Artist> = {
-    // '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5': new Artist({
-    //   id: '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5',
-    //   name: 'test',
-    //   grammy: false,
-    // }),
-  };
+  private items: Record<Artist['id'], Artist> = {};
+  private deleteArtistEvent = new Subject<Artist['id']>();
+
+  public deleteArtist$ = this.deleteArtistEvent.asObservable();
 
   create(createArtistDto: CreateArtistDto): Artist {
     const id = uuid();
@@ -46,6 +45,7 @@ export class ArtistService {
   }
 
   remove(id: Artist['id']): boolean {
+    this.deleteArtistEvent.next(id);
     return delete this.items[id];
   }
 }
