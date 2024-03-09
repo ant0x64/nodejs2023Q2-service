@@ -1,4 +1,11 @@
-import { IsUUID, IsString, IsNotEmpty, IsInt } from 'class-validator';
+import {
+  IsUUID,
+  IsString,
+  IsNotEmpty,
+  IsInt,
+  IsOptional,
+} from 'class-validator';
+import { Artist } from 'src/artist/entities/artist.entity';
 import { Album } from 'src/album/entities/album.entity';
 
 export class Track {
@@ -9,10 +16,12 @@ export class Track {
   @IsNotEmpty()
   name: string;
 
+  @IsOptional()
   @IsUUID(4)
-  artistId: Pick<Album, 'artistId'> | null = null;
+  artistId: Artist['id'] | null = null;
+  @IsOptional()
   @IsUUID(4)
-  albumId: Pick<Album, 'id'> | null = null;
+  albumId: Album['id'] | null = null;
 
   @IsInt()
   duration: number;

@@ -38,6 +38,10 @@ export class TrackService {
     return this.items[id];
   }
 
+  findByAlbumeId(id: Track['albumId']): Track[] {
+    return Object.values(this.items).filter((t) => t.albumId === id);
+  }
+
   update(id: Track['id'], updateTrackDto: UpdateTrackDto) {
     const track = this.findOne(id);
     if (track) {

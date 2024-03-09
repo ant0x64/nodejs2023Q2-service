@@ -4,17 +4,24 @@ import { v4 as uuid } from 'uuid';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
+import { TrackService } from 'src/track/track.service';
+import { ArtistService } from 'src/artist/artist.service';
 
 @Injectable()
 export class AlbumService {
   private items: Record<Album['id'], Album> = {
-    '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5': new Album({
-      id: '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5',
-      name: 'test',
-      year: 2000,
-      artistId: null,
-    }),
+    // '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5': new Album({
+    //   id: '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e5',
+    //   name: 'test',
+    //   year: 2000,
+    //   artistId: null,
+    // }),
   };
+
+  constructor(
+    private trackService: TrackService,
+    private artistService: ArtistService,
+  ) {}
 
   create(createAlbumDto: CreateAlbumDto): Album {
     const id = uuid();
@@ -47,6 +54,12 @@ export class AlbumService {
   }
 
   remove(id: Album['id']): boolean {
+    this.trackService.findByAlbumeId(id).forEach((track) => {
+      this.trackService.update(track.id, {
+        albumId: null,
+      });
+    });
+
     return delete this.items[id];
   }
 }

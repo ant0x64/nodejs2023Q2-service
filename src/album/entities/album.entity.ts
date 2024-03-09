@@ -24,7 +24,7 @@ export class Album {
 
   @IsUUID(4)
   @IsOptional()
-  artistId: Pick<Artist, 'id'> | null = null;
+  artistId: Artist['id'] | null = null;
 
   constructor(data: Partial<Album>) {
     Object.assign(this, data);
