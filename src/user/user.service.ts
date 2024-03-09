@@ -8,13 +8,13 @@ import { User } from './entities/user.entity';
 @Injectable()
 export class UserService {
   private items: Record<User['id'], User> = {
-    '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e4': new User({
-      login: 'test',
-      password: 'password',
-      version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    }),
+    // '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e4': new User({
+    //   login: 'test',
+    //   password: 'password',
+    //   version: 1,
+    //   createdAt: Date.now(),
+    //   updatedAt: Date.now(),
+    // }),
   };
 
   create(createUserDto: CreateUserDto): User {

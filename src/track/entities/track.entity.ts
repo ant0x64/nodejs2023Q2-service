@@ -9,11 +9,11 @@ export class Track {
   @IsNotEmpty()
   name: string;
 
-  artistId: Pick<Album, 'artistId'> | null;
-  albumId: Pick<Album, 'id'> | null;
+  artistId: Pick<Album, 'artistId'> | null = null;
+  albumId: Pick<Album, 'id'> | null = null;
 
   @IsInt()
-  duration: number; // integer number
+  duration: number;
 
   constructor(data: Partial<Track>) {
     Object.assign(this, data);
