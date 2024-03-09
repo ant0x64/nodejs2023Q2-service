@@ -1,26 +1,59 @@
 import { Injectable } from '@nestjs/common';
+import { v4 as uuid } from 'uuid';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  private items: Record<User['id'], User> = {
+    '5f8ab3b7-24ea-42e7-bc27-4ea1bf1f41e4': new User({
+      login: 'test',
+      password: 'password',
+      version: 1,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    }),
+  };
+
+  create(createUserDto: CreateUserDto): User {
+    const id = uuid();
+    const date = Date.now();
+
+    // @todo class validation
+    const user = new User({
+      ...createUserDto,
+      id,
+      version: 1,
+      createdAt: date,
+      updatedAt: date,
+    });
+
+    this.items[id] = user;
+    return user;
   }
 
-  findAll() {
-    return `This action returns all user`;
+  findAll(): User[] {
+    return Object.values(this.items);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: User['id']): User | undefined {
+    return this.items[id];
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(id: User['id'], updateUserDto: UpdateUserDto) {
+    const user = this.findOne(id);
+    if (user) {
+      Object.assign(user, updateUserDto);
+      user.updatedAt = Date.now();
+      user.version++;
+    }
+
+    return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: User['id']): boolean {
+    return delete this.items[id];
   }
 }
