@@ -10,9 +10,9 @@ import { Subject } from 'rxjs';
 @Injectable()
 export class ArtistService {
   private items: Record<Artist['id'], Artist> = {};
-  private deleteArtistEvent = new Subject<Artist['id']>();
+  private deleteEvent = new Subject<Artist['id']>();
 
-  public deleteArtist$ = this.deleteArtistEvent.asObservable();
+  public delete$ = this.deleteEvent.asObservable();
 
   create(createArtistDto: CreateArtistDto): Artist {
     const id = uuid();
@@ -45,7 +45,7 @@ export class ArtistService {
   }
 
   remove(id: Artist['id']): boolean {
-    this.deleteArtistEvent.next(id);
-    return delete this.items[id];
+    this.deleteEvent.next(id);
+    return this.items[id] && delete this.items[id];
   }
 }

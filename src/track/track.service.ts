@@ -6,18 +6,37 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/track.entity';
 import { ArtistService } from 'src/artist/artist.service';
 
+import { Subject } from 'rxjs';
+import { AlbumService } from 'src/album/album.service';
+
 @Injectable()
 export class TrackService {
   private items: Record<Track['id'], Track> = {};
+  private deleteEvent = new Subject<Track['id']>();
 
-  constructor(private artistService: ArtistService) {
-    this.artistService.deleteArtist$.subscribe((artistId) => {
-      Object.values(this.items).forEach((album) => {
-        if (artistId !== album.artistId) {
+  public delete$ = this.deleteEvent.asObservable();
+
+  constructor(
+    private artistService: ArtistService,
+    private albumService: AlbumService,
+  ) {
+    this.artistService.delete$.subscribe((artistId) => {
+      Object.values(this.items).forEach((track) => {
+        if (artistId !== track.artistId) {
           return;
         }
-        this.update(album.id, {
+        this.update(track.id, {
           artistId: null,
+        });
+      });
+    });
+    this.albumService.delete$.subscribe((albumId) => {
+      Object.values(this.items).forEach((track) => {
+        if (albumId !== track.albumId) {
+          return;
+        }
+        this.update(track.id, {
+          albumId: null,
         });
       });
     });
@@ -58,6 +77,7 @@ export class TrackService {
   }
 
   remove(id: Track['id']): boolean {
-    return delete this.items[id];
+    this.deleteEvent.next(id);
+    return this.items[id] && delete this.items[id];
   }
 }

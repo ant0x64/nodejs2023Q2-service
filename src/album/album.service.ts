@@ -4,18 +4,19 @@ import { v4 as uuid } from 'uuid';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
-import { TrackService } from 'src/track/track.service';
 import { ArtistService } from 'src/artist/artist.service';
+
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class AlbumService {
   private items: Record<Album['id'], Album> = {};
+  private deleteEvent = new Subject<Album['id']>();
 
-  constructor(
-    private trackService: TrackService,
-    private artistService: ArtistService,
-  ) {
-    this.artistService.deleteArtist$.subscribe((artistId) => {
+  public delete$ = this.deleteEvent.asObservable();
+
+  constructor(private artistService: ArtistService) {
+    this.artistService.delete$.subscribe((artistId) => {
       Object.values(this.items).forEach((album) => {
         if (artistId !== album.artistId) {
           return;
@@ -58,12 +59,7 @@ export class AlbumService {
   }
 
   remove(id: Album['id']): boolean {
-    this.trackService.findByAlbumeId(id).forEach((track) => {
-      this.trackService.update(track.id, {
-        albumId: null,
-      });
-    });
-
-    return delete this.items[id];
+    this.deleteEvent.next(id);
+    return this.items[id] && delete this.items[id];
   }
 }

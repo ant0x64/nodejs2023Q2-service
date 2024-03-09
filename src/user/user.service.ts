@@ -5,9 +5,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
+import { Subject } from 'rxjs';
+
 @Injectable()
 export class UserService {
   private items: Record<User['id'], User> = {};
+  private deleteEvent = new Subject<User['id']>();
+
+  public delete$ = this.deleteEvent.asObservable();
 
   create(createUserDto: CreateUserDto): User {
     const id = uuid();
@@ -46,6 +51,6 @@ export class UserService {
   }
 
   remove(id: User['id']): boolean {
-    return delete this.items[id];
+    return this.items[id] && delete this.items[id];
   }
 }
