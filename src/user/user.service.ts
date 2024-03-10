@@ -1,0 +1,56 @@
+import { Injectable } from '@nestjs/common';
+import { v4 as uuid } from 'uuid';
+
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+
+import { Subject } from 'rxjs';
+
+@Injectable()
+export class UserService {
+  private items: Record<User['id'], User> = {};
+  private deleteEvent = new Subject<User['id']>();
+
+  public delete$ = this.deleteEvent.asObservable();
+
+  create(createUserDto: CreateUserDto): User {
+    const id = uuid();
+    const date = Date.now();
+
+    // @todo class validation
+    const user = new User({
+      ...createUserDto,
+      id,
+      version: 1,
+      createdAt: date,
+      updatedAt: date,
+    });
+
+    this.items[id] = user;
+    return user;
+  }
+
+  findAll(): User[] {
+    return Object.values(this.items);
+  }
+
+  findOne(id: User['id']): User | undefined {
+    return this.items[id];
+  }
+
+  update(id: User['id'], updateUserDto: UpdateUserDto) {
+    const user = this.findOne(id);
+    if (user) {
+      Object.assign(user, updateUserDto);
+      user.updatedAt = Date.now();
+      user.version++;
+    }
+
+    return user;
+  }
+
+  remove(id: User['id']): boolean {
+    return this.items[id] && delete this.items[id];
+  }
+}

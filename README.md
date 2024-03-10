@@ -1,72 +1,47 @@
-# Home Library Service
+# Home Library REST API Service
+
+Home Library REST API servcice built with the [Nest.js framework](https://github.com/nestjs/nest) and adhering to best practices, enables users to seamlessly execute CRUD operations on Artists, Tracks, and Albums. Additionally, there is implemented Observer events using [RxJS](https://github.com/ReactiveX/rxjs), enhancing real-time data interactions. The API is comprehensively documented with [Swagger](https://github.com/swagger-api/swagger-ui), providing users with clear and accessible insights into its capabilities and endpoints.
+
 
 ## Prerequisites
 
-- Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+Make sure you have the following installed on your machine:
 
-## Downloading
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/) (Node Package Manager)
 
-```
-git clone {repository URL}
-```
 
-## Installing NPM modules
+## How to install
 
-```
-npm install
-```
+1. Clone the respository
+   ```bash
+   git clone -b dev git@github.com:ant0x64/nodejs2023Q2-service.git
+2. Go to the project directory
+    ```bash
+    cd nodejs2023Q2-service
+    ```
+3. Install dependencies
+    ```bash
+    npm ci
+    ```
+4. Setup the ENV
+   
+    You can change the ports used in the configuration file `<root>/.env`.
 
-## Running application
+    Base configuration:
+    ```env
+    PORT=4000
+    ```
+5. Run the Application
+   ```bash
+   npm start # default mode
+   npm run start:dev # dev mode
+   npm run start:prod # prod mode
+   npm test # execute testing scripts
+   ```
 
-```
-npm start
-```
+## How to use
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+Open your web browser and navigate to the following URL: `http://localhost:PORT/doc` (replace `PORT` with the actual port number your project is running on). 
 
-## Testing
-
-After application running open new terminal and enter:
-
-To run all tests without authorization
-
-```
-npm run test
-```
-
-To run only one of all test suites
-
-```
-npm run test -- <path to suite>
-```
-
-To run all test with authorization
-
-```
-npm run test:auth
-```
-
-To run only specific test suite with authorization
-
-```
-npm run test:auth -- <path to suite>
-```
-
-### Auto-fix and format
-
-```
-npm run lint
-```
-
-```
-npm run format
-```
-
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+This URL contains the OpenAPI Schema documentation. You can explore and interact with the API endpoints using the Swagger UI.
