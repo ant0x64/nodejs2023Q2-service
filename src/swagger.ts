@@ -5,6 +5,12 @@ export const enableSwagger = (app: INestApplication) => {
   return SwaggerModule.setup(
     'doc',
     app,
-    SwaggerModule.createDocument(app, new DocumentBuilder().build()),
+    SwaggerModule.createDocument(
+      app,
+      new DocumentBuilder()
+        .addServer('/')
+        .setTitle('Home music library service')
+        .build(),
+    ),
   );
 };

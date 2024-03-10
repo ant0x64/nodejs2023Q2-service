@@ -1,5 +1,6 @@
 import { IsUUID } from 'class-validator';
 import { Optional } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { Artist } from 'src/artist/entities/artist.entity';
 import { Album } from 'src/album/entities/album.entity';
@@ -16,11 +17,14 @@ export class Favorite {
   userId: User['id'];
 
   @Transform(transformToPlainArray, { toPlainOnly: true })
+  @ApiProperty({ type: [Artist] })
   artists: Record<Artist['id'], Artist> = {};
 
   @Transform(transformToPlainArray, { toPlainOnly: true })
+  @ApiProperty({ type: [Album] })
   albums: Record<Album['id'], Album> = {};
 
   @Transform(transformToPlainArray, { toPlainOnly: true })
+  @ApiProperty({ type: [Track] })
   tracks: Record<Track['id'], Track> = {};
 }
