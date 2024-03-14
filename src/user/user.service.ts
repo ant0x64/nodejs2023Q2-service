@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { v4 as uuid } from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { User } from './user.entity';
+
+import { validate } from 'class-validator';
 
 import { Subject } from 'rxjs';
 
@@ -14,43 +18,41 @@ export class UserService {
 
   public delete$ = this.deleteEvent.asObservable();
 
-  create(createUserDto: CreateUserDto): User {
-    const id = uuid();
-    const date = Date.now();
+  constructor(
+    @InjectRepository(User)
+    private repository: Repository<User>,
+  ) {}
 
-    // @todo class validation
+  create(createUserDto: CreateUserDto): Promise<User> {
     const user = new User({
       ...createUserDto,
-      id,
-      version: 1,
-      createdAt: date,
-      updatedAt: date,
     });
+    validate(user);
 
-    this.items[id] = user;
-    return user;
+    return this.repository.save(user);
   }
 
-  findAll(): User[] {
-    return Object.values(this.items);
+  findAll(): Promise<User[]> {
+    return this.repository.find();
   }
 
-  findOne(id: User['id']): User | undefined {
-    return this.items[id];
+  findOne(id: User['id']): Promise<User | null> {
+    return this.repository.findOneBy({ id });
   }
 
-  update(id: User['id'], updateUserDto: UpdateUserDto) {
-    const user = this.findOne(id);
-    if (user) {
-      Object.assign(user, updateUserDto);
-      user.updatedAt = Date.now();
-      user.version++;
-    }
-
-    return user;
+  update(
+    id: User['id'],
+    updateUserDto: UpdateUserDto,
+  ): Promise<User | undefined> {
+    return this.repository.preload({ id, ...updateUserDto }).then((user) => {
+      return user ? this.repository.save(user) : user;
+    });
   }
 
-  remove(id: User['id']): boolean {
-    return this.items[id] && delete this.items[id];
+  remove(id: User['id']): Promise<boolean> {
+    return this.findOne(id).then((user) => {
+      this.deleteEvent.next(id);
+      return user ? this.repository.remove(user) && true : false;
+    });
   }
 }

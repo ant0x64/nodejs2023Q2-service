@@ -1,7 +1,7 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/user/user.entity';
 import { ArtistService } from 'src/artist/artist.service';
 import { AlbumService } from 'src/album/album.service';
 import { TrackService } from 'src/track/track.service';

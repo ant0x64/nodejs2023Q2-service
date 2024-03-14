@@ -1,3 +1,13 @@
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  VersionColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
 import {
   IsUUID,
   IsString,
@@ -8,35 +18,40 @@ import {
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
 
-import { ApiProperty } from '@nestjs/swagger';
-
+@Entity()
 export class User {
+  @PrimaryGeneratedColumn('uuid')
   @IsUUID(4)
   @ApiProperty({ format: 'uuid' })
   readonly id: string;
 
+  @Column()
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
   login: string;
 
-  @Exclude({ toPlainOnly: true })
+  @Column()
   @IsString()
   @IsNotEmpty()
+  @Exclude({ toPlainOnly: true })
   @ApiProperty({ writeOnly: true })
   password: string;
 
+  @VersionColumn()
   @IsInt()
   @Min(1)
   @IsNotEmpty()
   @ApiProperty({ minimum: 1 })
   version: number;
 
+  @CreateDateColumn()
   @IsDate()
   @IsNotEmpty()
   @ApiProperty({ format: 'timestamp' })
   createdAt: number;
 
+  @UpdateDateColumn()
   @IsDate()
   @IsNotEmpty()
   @ApiProperty({ format: 'timestamp' })

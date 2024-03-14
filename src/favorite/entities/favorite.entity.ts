@@ -5,7 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Artist } from 'src/artist/entities/artist.entity';
 import { Album } from 'src/album/entities/album.entity';
 import { Track } from 'src/track/entities/track.entity';
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/user/user.entity';
 import { Exclude, Transform } from 'class-transformer';
 
 const transformToPlainArray = (instance) => Object.values(instance.value);

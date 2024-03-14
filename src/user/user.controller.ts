@@ -21,7 +21,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-import { User } from './entities/user.entity';
+import { User } from './user.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
@@ -40,7 +40,7 @@ export class UserController {
     status: 400,
     description: 'Does not contain required fields',
   })
-  create(@Body() createUserDto: CreateUserDto): User {
+  create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
@@ -80,11 +80,11 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 403, description: 'Old password is wrong' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  update(
+  async update(
     @Param('id', UUIDPipe) id: string,
     @Body() updateUserPasswordDto: UpdateUserPasswordDto,
   ) {
-    const user = this.findOne(id);
+    const user = await this.findOne(id);
     if (updateUserPasswordDto.oldPassword !== user.password) {
       throw new ForbiddenException();
     }
