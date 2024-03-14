@@ -16,7 +16,7 @@ import {
   IsDate,
   Min,
 } from 'class-validator';
-import { Exclude } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -49,13 +49,15 @@ export class User {
   @IsDate()
   @IsNotEmpty()
   @ApiProperty({ format: 'timestamp' })
-  createdAt: number;
+  @Transform((params) => params.value.getTime(), { toPlainOnly: true })
+  createdAt: Date;
 
   @UpdateDateColumn()
   @IsDate()
   @IsNotEmpty()
   @ApiProperty({ format: 'timestamp' })
-  updatedAt: number;
+  @Transform((params) => params.value.getTime(), { toPlainOnly: true })
+  updatedAt: Date;
 
   constructor(data: Partial<User>) {
     Object.assign(this, data);

@@ -61,8 +61,8 @@ export class UserController {
   @ApiResponse({ status: 200, type: User })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  findOne(@Param('id', UUIDPipe) id: string) {
-    const user = this.userService.findOne(id);
+  async findOne(@Param('id', UUIDPipe) id: string) {
+    const user = await this.userService.findOne(id);
     if (!user) {
       throw new NotFoundException();
     }
@@ -104,8 +104,8 @@ export class UserController {
   @ApiResponse({ status: 204, description: 'Successful' })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  remove(@Param('id', UUIDPipe) id: string) {
-    const user = this.userService.findOne(id);
+  async remove(@Param('id', UUIDPipe) id: string) {
+    const user = await this.userService.findOne(id);
     if (!user) {
       throw new NotFoundException();
     }
