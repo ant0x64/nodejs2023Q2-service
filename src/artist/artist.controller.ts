@@ -15,17 +15,16 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UUIDPipe } from 'src/common/pipes/uuid.pipe';
 
+import { Artist } from './artist.entity';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-
-import { Artist } from './entities/artist.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('artist')
 @ApiTags('Artists')
 export class ArtistController {
-  constructor(private readonly artistService: ArtistService) {}
+  constructor(private readonly service: ArtistService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create artist' })
@@ -38,15 +37,15 @@ export class ArtistController {
     status: 400,
     description: 'Does not contain required fields',
   })
-  create(@Body() createArtistDto: CreateArtistDto) {
-    return this.artistService.create(createArtistDto);
+  create(@Body() createDto: CreateArtistDto) {
+    return this.service.create(createDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all artists' })
   @ApiResponse({ status: 200, type: [Artist] })
   findAll() {
-    return this.artistService.findAll();
+    return this.service.findAll();
   }
 
   @Get(':id')
@@ -59,12 +58,12 @@ export class ArtistController {
   @ApiResponse({ status: 200, type: Artist })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'Artist not found' })
-  findOne(@Param('id', UUIDPipe) id: string) {
-    const artist = this.artistService.findOne(id);
-    if (!artist) {
+  async findOne(@Param('id', UUIDPipe) id: string) {
+    const entity = await this.service.findOne(id);
+    if (!entity) {
       throw new NotFoundException();
     }
-    return artist;
+    return entity;
   }
 
   @Put(':id')
@@ -77,12 +76,15 @@ export class ArtistController {
   @ApiResponse({ status: 200, type: Artist })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'Artist not found' })
-  update(
+  async update(
     @Param('id', UUIDPipe) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
-    this.findOne(id);
-    return this.artistService.update(id, updateArtistDto);
+    const entity = await this.service.findOne(id);
+    if (!entity) {
+      throw new NotFoundException();
+    }
+    return this.service.update(id, updateArtistDto);
   }
 
   @Delete(':id')
@@ -96,12 +98,12 @@ export class ArtistController {
   @ApiResponse({ status: 204, description: 'Successful' })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'Artist not found' })
-  remove(@Param('id', UUIDPipe) id: string) {
-    const artist = this.artistService.findOne(id);
-    if (!artist) {
+  async remove(@Param('id', UUIDPipe) id: string) {
+    const entity = await this.service.findOne(id);
+    if (!entity) {
       throw new NotFoundException();
     }
 
-    return this.artistService.remove(id);
+    return this.service.remove(id);
   }
 }

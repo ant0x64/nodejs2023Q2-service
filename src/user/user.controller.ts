@@ -27,7 +27,7 @@ import { User } from './user.entity';
 @Controller('user')
 @ApiTags('Users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly service: UserService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create user' })
@@ -40,15 +40,15 @@ export class UserController {
     status: 400,
     description: 'Does not contain required fields',
   })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  create(@Body() createDto: CreateUserDto) {
+    return this.service.create(createDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, type: [User] })
   findAll() {
-    return this.userService.findAll();
+    return this.service.findAll();
   }
 
   @Get(':id')
@@ -62,11 +62,11 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'User not found' })
   async findOne(@Param('id', UUIDPipe) id: string) {
-    const user = await this.userService.findOne(id);
-    if (!user) {
+    const entity = await this.service.findOne(id);
+    if (!entity) {
       throw new NotFoundException();
     }
-    return user;
+    return entity;
   }
 
   @Put(':id')
@@ -84,11 +84,11 @@ export class UserController {
     @Param('id', UUIDPipe) id: string,
     @Body() updateUserPasswordDto: UpdateUserPasswordDto,
   ) {
-    const user = await this.findOne(id);
-    if (updateUserPasswordDto.oldPassword !== user.password) {
+    const entity = await this.findOne(id);
+    if (updateUserPasswordDto.oldPassword !== entity.password) {
       throw new ForbiddenException();
     }
-    return this.userService.update(id, {
+    return this.service.update(id, {
       password: updateUserPasswordDto.newPassword,
     } as UpdateUserDto);
   }
@@ -105,11 +105,11 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'User not found' })
   async remove(@Param('id', UUIDPipe) id: string) {
-    const user = await this.userService.findOne(id);
-    if (!user) {
+    const entity = await this.service.findOne(id);
+    if (!entity) {
       throw new NotFoundException();
     }
 
-    return this.userService.remove(id);
+    return this.service.remove(id);
   }
 }

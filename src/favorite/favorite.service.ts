@@ -6,7 +6,7 @@ import { ArtistService } from 'src/artist/artist.service';
 import { AlbumService } from 'src/album/album.service';
 import { TrackService } from 'src/track/track.service';
 import { Favorite } from './entities/favorite.entity';
-import { Artist } from 'src/artist/entities/artist.entity';
+import { Artist } from 'src/artist/artist.entity';
 import { Album } from 'src/album/entities/album.entity';
 import { Track } from 'src/track/entities/track.entity';
 
@@ -48,7 +48,7 @@ export class FavoriteService {
     if (!artist) {
       throw new UnprocessableEntityException();
     }
-    this.items[this.blank_user].artists[id] = artist;
+    //this.items[this.blank_user].artists[id] = artist;
   }
 
   removeArtist(id: Artist['id']) {

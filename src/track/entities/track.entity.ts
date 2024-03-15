@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { Artist } from 'src/artist/entities/artist.entity';
+import { Artist } from 'src/artist/artist.entity';
 import { Album } from 'src/album/entities/album.entity';
 
 export class Track {

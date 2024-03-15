@@ -1,30 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   VersionColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-import {
-  IsUUID,
-  IsString,
-  IsNotEmpty,
-  IsInt,
-  IsDate,
-  Min,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsInt, IsDate, Min } from 'class-validator';
 import { Exclude, Transform } from 'class-transformer';
+import { AbstractEntity } from 'src/common/abstract.entity';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  @IsUUID(4)
-  @ApiProperty({ format: 'uuid' })
-  readonly id: string;
-
+export class User extends AbstractEntity {
   @Column()
   @IsString()
   @IsNotEmpty()
@@ -58,8 +46,4 @@ export class User {
   @ApiProperty({ format: 'timestamp' })
   @Transform((params) => params.value.getTime(), { toPlainOnly: true })
   updatedAt: Date;
-
-  constructor(data: Partial<User>) {
-    Object.assign(this, data);
-  }
 }

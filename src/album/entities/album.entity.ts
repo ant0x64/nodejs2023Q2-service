@@ -8,7 +8,7 @@ import {
   IsOptional,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Artist } from 'src/artist/entities/artist.entity';
+import { Artist } from 'src/artist/artist.entity';
 
 export class Album {
   @IsUUID(4)
