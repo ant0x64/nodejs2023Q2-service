@@ -63,7 +63,7 @@ export class FavoriteService {
     if (!album) {
       throw new UnprocessableEntityException();
     }
-    this.items[this.blank_user].albums[id] = album;
+    //this.items[this.blank_user].albums[id] = album;
   }
 
   removeAlbum(id: Album['id']) {
@@ -78,7 +78,7 @@ export class FavoriteService {
     if (!track) {
       throw new UnprocessableEntityException();
     }
-    this.items[this.blank_user].tracks[id] = track;
+    //this.items[this.blank_user].tracks[id] = track;
   }
 
   removeTrack(id: Track['id']) {

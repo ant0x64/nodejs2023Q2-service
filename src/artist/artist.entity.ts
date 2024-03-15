@@ -1,10 +1,11 @@
+import { AbstractEntity } from 'src/common/abstract.entity';
+
 import { ApiProperty } from '@nestjs/swagger';
 import { Entity, Column } from 'typeorm';
 
 import { IsString, IsNotEmpty, IsBoolean } from 'class-validator';
-import { AbstractEntity } from 'src/common/abstract.entity';
 
-@Entity()
+@Entity({ name: 'artists' })
 export class Artist extends AbstractEntity {
   @Column()
   @IsString()

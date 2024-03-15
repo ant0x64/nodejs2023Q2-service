@@ -1,3 +1,5 @@
+import { AbstractEntity } from 'src/common/abstract.entity';
+
 import { ApiProperty } from '@nestjs/swagger';
 import {
   Entity,
@@ -9,9 +11,8 @@ import {
 
 import { IsString, IsNotEmpty, IsInt, IsDate, Min } from 'class-validator';
 import { Exclude, Transform } from 'class-transformer';
-import { AbstractEntity } from 'src/common/abstract.entity';
 
-@Entity()
+@Entity({ name: 'users' })
 export class User extends AbstractEntity {
   @Column()
   @IsString()

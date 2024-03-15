@@ -1,3 +1,5 @@
+import { AbstractService } from 'src/common/abstract.service';
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -7,8 +9,6 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { Artist } from './artist.entity';
 
 import { validate } from 'class-validator';
-
-import { AbstractService } from 'src/common/abstract.service';
 
 @Injectable()
 export class ArtistService extends AbstractService<Artist> {

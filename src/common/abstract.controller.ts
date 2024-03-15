@@ -17,6 +17,21 @@ import { UUIDPipe } from 'src/common/pipes/uuid.pipe';
 import { AbstractService } from './abstract.service';
 import { AbstractEntity } from './abstract.entity';
 
+const DynamicResponseType = (params) => {
+  return function (
+    target: AbstractController<any>,
+    propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ) {
+    if (target.getEntity) {
+      const entity = target.getEntity();
+      params.type = params.array ? [entity] : entity;
+    }
+
+    return ApiResponse(params)(target, propertyKey, descriptor);
+  };
+};
+
 @UseInterceptors(ClassSerializerInterceptor)
 export abstract class AbstractController<
   E extends AbstractEntity,
@@ -24,11 +39,13 @@ export abstract class AbstractController<
 > {
   protected service: S;
 
+  abstract getEntity(): E;
+
   @Post()
   @ApiOperation({ summary: 'Create entity' })
-  @ApiResponse({
+  @DynamicResponseType({
     status: 201,
-    description: 'The artist has been created.',
+    description: 'The entity has been created.',
   })
   @ApiResponse({
     status: 400,
@@ -39,8 +56,8 @@ export abstract class AbstractController<
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all entitites' })
-  @ApiResponse({ status: 200 })
+  @ApiOperation({ summary: 'Get all entitys' })
+  @DynamicResponseType({ status: 200, array: true })
   findAll() {
     return this.service.findAll();
   }
@@ -52,7 +69,7 @@ export abstract class AbstractController<
     format: 'uuid',
     description: 'The ID of the entity',
   })
-  @ApiResponse({ status: 200 })
+  @DynamicResponseType({ status: 200 })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'Entity not found' })
   async findOne(@Param('id', UUIDPipe) id: string) {
@@ -70,11 +87,17 @@ export abstract class AbstractController<
     format: 'uuid',
     description: 'The ID of the entity',
   })
-  @ApiResponse({ status: 200 })
+  @DynamicResponseType({ status: 200 })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'Entity not found' })
-  update(@Param('id', UUIDPipe) id: string, @Body() updateDto: Partial<E>) {
-    this.findOne(id);
+  async update(
+    @Param('id', UUIDPipe) id: string,
+    @Body() updateDto: Partial<E>,
+  ) {
+    const entity = await this.service.findOne(id);
+    if (!entity) {
+      throw new NotFoundException();
+    }
     return this.service.update(id, updateDto);
   }
 

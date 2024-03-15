@@ -1,25 +1,18 @@
 import { Module } from '@nestjs/common';
+
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Track } from './entities/track.entity';
+
 import { TrackService } from './track.service';
 import { TrackController } from './track.controller';
+
 import { ArtistModule } from 'src/artist/artist.module';
-import { ArtistService } from 'src/artist/artist.service';
 import { AlbumModule } from 'src/album/album.module';
-import { AlbumService } from 'src/album/album.service';
 
 @Module({
-  imports: [ArtistModule, AlbumModule],
+  imports: [TypeOrmModule.forFeature([Track]), ArtistModule, AlbumModule],
   controllers: [TrackController],
-  providers: [
-    TrackService,
-    {
-      useExisting: ArtistService,
-      provide: 'ArtistService',
-    },
-    {
-      useExisting: AlbumService,
-      provide: 'AlbumService',
-    },
-  ],
+  providers: [TrackService],
   exports: [TrackService],
 })
 export class TrackModule {}

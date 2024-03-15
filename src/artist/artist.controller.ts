@@ -78,13 +78,13 @@ export class ArtistController {
   @ApiResponse({ status: 404, description: 'Artist not found' })
   async update(
     @Param('id', UUIDPipe) id: string,
-    @Body() updateArtistDto: UpdateArtistDto,
+    @Body() updateDto: UpdateArtistDto,
   ) {
     const entity = await this.service.findOne(id);
     if (!entity) {
       throw new NotFoundException();
     }
-    return this.service.update(id, updateArtistDto);
+    return this.service.update(id, updateDto);
   }
 
   @Delete(':id')
