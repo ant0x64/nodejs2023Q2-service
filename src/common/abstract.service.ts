@@ -31,9 +31,9 @@ export abstract class AbstractService<T extends AbstractEntity> {
   }
 
   remove(id: T['id']): Promise<boolean> {
-    return this.findOne(id).then((entity) => {
+    return this.findOne(id).then(async (entity) => {
       this.deleteEvent.next(id);
-      return entity ? this.repository.remove(entity) && true : false;
+      return entity ? !!(await this.repository.remove(entity)) : false;
     });
   }
 }
