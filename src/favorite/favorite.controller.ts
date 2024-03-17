@@ -5,39 +5,58 @@ import {
   Param,
   Delete,
   UseInterceptors,
-  NotFoundException,
   HttpCode,
   ClassSerializerInterceptor,
+  ParseEnumPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UUIDPipe } from 'src/common/pipes/uuid.pipe';
 import { FavoriteService } from './favorite.service';
-import { Favorite } from './entities/favorite.entity';
+import { Favorite } from './favorite.entity';
+import { User } from 'src/user/user.entity';
+
+enum endpoints {
+  ARTIST = 'artist',
+  ALBUM = 'album',
+  TRACK = 'track',
+}
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('favs')
 @ApiTags('Favorites')
 export class FavoriteController {
-  constructor(private readonly favoriteService: FavoriteService) {}
+  protected blank_user: User['id'] = '0fa85f64-5717-4562-b3fc-2c963f66afa6';
+  protected favorite: Favorite;
+
+  constructor(private readonly service: FavoriteService) {}
+
+  protected async getUserFavorite() {
+    return this.service.findByUser(this.blank_user);
+  }
 
   @Get()
-  @ApiOperation({ summary: 'Get all favorites' })
+  @ApiOperation({ summary: 'Get user favorites' })
   @ApiResponse({ status: 200, type: Favorite })
-  findAll() {
-    return this.favoriteService.findAll();
+  async getAll() {
+    return this.getUserFavorite();
   }
 
-  @Post('artist/:id')
-  @ApiOperation({ summary: 'Add artist' })
+  @Post(':entity/:id')
+  @ApiOperation({ summary: 'Add entity' })
+  @ApiParam({
+    name: 'entity',
+    enum: endpoints,
+    description: 'The entity type',
+  })
   @ApiParam({
     name: 'id',
     format: 'uuid',
-    description: 'The ID of the artist',
+    description: 'The ID of the entity',
   })
   @ApiResponse({
     status: 201,
-    description: 'The artist has been added.',
+    description: 'The entity has been added.',
   })
   @ApiResponse({
     status: 400,
@@ -45,59 +64,25 @@ export class FavoriteController {
   })
   @ApiResponse({
     status: 422,
-    description: "The artist doesn't exist",
+    description: "The entity doesn't exist",
   })
-  addArtist(@Param('id', UUIDPipe) id: string) {
-    this.favoriteService.addArtist(id);
-    return 'Successful';
+  async add(
+    @Param('entity', new ParseEnumPipe(endpoints)) enpoint: endpoints,
+    @Param('id', UUIDPipe) id: string,
+  ) {
+    const entity = (enpoint + 's') as keyof FavoriteService['services'];
+    return this.service.add(await this.getUserFavorite(), entity, id);
   }
 
-  @Delete('artist/:id')
-  @HttpCode(204)
-  @ApiOperation({ summary: 'Remove artist' })
-  @ApiParam({
-    name: 'id',
-    format: 'uuid',
-    description: 'The ID of the artist',
-  })
-  @ApiResponse({ status: 204, description: 'Successful' })
-  @ApiResponse({ status: 400, description: 'ID has invalid format' })
-  @ApiResponse({ status: 404, description: 'Record not found' })
-  removeArtist(@Param('id', UUIDPipe) id: string) {
-    if (!this.favoriteService.removeArtist(id)) {
-      throw new NotFoundException();
-    }
-    return 'Successful';
-  }
-
-  @Post('album/:id')
-  @ApiOperation({ summary: 'Add album' })
-  @ApiParam({
-    name: 'id',
-    format: 'uuid',
-    description: 'The ID of the album',
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'The album has been added.',
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'ID has invalid format',
-  })
-  @ApiResponse({
-    status: 422,
-    description: "The album doesn't exist",
-  })
-  addAlbum(@Param('id', UUIDPipe) id: string) {
-    this.favoriteService.addAlbum(id);
-    return 'Successful';
-  }
-
-  @Delete('album/:id')
+  @Delete(':entity/:id')
   @HttpCode(204)
   @ApiOperation({ summary: 'Remove album' })
   @ApiParam({
+    name: 'entity',
+    enum: endpoints,
+    description: 'The entity type',
+  })
+  @ApiParam({
     name: 'id',
     format: 'uuid',
     description: 'The ID of the album',
@@ -105,52 +90,11 @@ export class FavoriteController {
   @ApiResponse({ status: 204, description: 'Successful' })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'Record not found' })
-  removeAlbum(@Param('id', UUIDPipe) id: string) {
-    if (!this.favoriteService.removeAlbum(id)) {
-      throw new NotFoundException();
-    }
-    return 'Successful';
-  }
-
-  @Post('track/:id')
-  @ApiOperation({ summary: 'Add track' })
-  @ApiParam({
-    name: 'id',
-    format: 'uuid',
-    description: 'The ID of the track',
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'The track has been added.',
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'ID has invalid format',
-  })
-  @ApiResponse({
-    status: 422,
-    description: "The track doesn't exist",
-  })
-  addTrack(@Param('id', UUIDPipe) id: string) {
-    this.favoriteService.addTrack(id);
-    return 'Successful';
-  }
-
-  @Delete('track/:id')
-  @HttpCode(204)
-  @ApiOperation({ summary: 'Remove track' })
-  @ApiParam({
-    name: 'id',
-    format: 'uuid',
-    description: 'The ID of the track',
-  })
-  @ApiResponse({ status: 204, description: 'Successful' })
-  @ApiResponse({ status: 400, description: 'ID has invalid format' })
-  @ApiResponse({ status: 404, description: 'Record not found' })
-  removeTrack(@Param('id', UUIDPipe) id: string) {
-    if (!this.favoriteService.removeTrack(id)) {
-      throw new NotFoundException();
-    }
-    return 'Successful';
+  async delete(
+    @Param('entity', new ParseEnumPipe(endpoints)) enpoint: endpoints,
+    @Param('id', UUIDPipe) id: string,
+  ) {
+    const entity = (enpoint + 's') as keyof FavoriteService['services'];
+    return this.service.delete(await this.getUserFavorite(), entity, id);
   }
 }

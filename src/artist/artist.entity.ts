@@ -6,7 +6,7 @@ import { Entity, Column } from 'typeorm';
 import { IsString, IsNotEmpty, IsBoolean } from 'class-validator';
 
 @Entity({ name: 'artists' })
-export class Artist extends AbstractEntity {
+export class Artist extends AbstractEntity<Artist> {
   @Column()
   @IsString()
   @IsNotEmpty()

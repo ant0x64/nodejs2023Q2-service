@@ -19,7 +19,7 @@ import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 
-import { Track } from './entities/track.entity';
+import { Track } from './track.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('track')

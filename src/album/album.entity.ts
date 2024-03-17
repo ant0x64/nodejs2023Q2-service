@@ -2,7 +2,7 @@ import { AbstractEntity } from 'src/common/abstract.entity';
 import { Artist } from 'src/artist/artist.entity';
 
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne } from 'typeorm';
 
 import {
   IsUUID,
@@ -13,9 +13,10 @@ import {
   Max,
   IsOptional,
 } from 'class-validator';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'albums' })
-export class Album extends AbstractEntity {
+export class Album extends AbstractEntity<Album> {
   @Column()
   @IsString()
   @IsNotEmpty()
@@ -29,10 +30,14 @@ export class Album extends AbstractEntity {
   @ApiProperty({ format: 'year', minimum: 1900 })
   year: number;
 
-  @OneToOne(() => Artist)
-  @JoinColumn()
+  @ManyToOne(() => Artist, { onDelete: 'SET NULL' })
+  @Exclude()
+  @IsOptional()
+  artist: Artist | null;
+
+  @Column({ nullable: true })
   @IsUUID(4)
   @IsOptional()
   @ApiProperty({ format: 'uuid', type: 'string', required: false })
-  artistId: Artist | null = null;
+  artistId: Artist['id'] | null;
 }

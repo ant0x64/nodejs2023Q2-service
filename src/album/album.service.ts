@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CreateAlbumDto } from './dto/create-album.dto';
-import { Album } from './entities/album.entity';
+import { Album } from './album.entity';
 
 import { validate } from 'class-validator';
 

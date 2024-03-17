@@ -23,6 +23,7 @@ config();
       /** @todo set false for production */
       synchronize: true,
       autoLoadEntities: true,
+      logging: true,
     }),
     UserModule,
     TrackModule,

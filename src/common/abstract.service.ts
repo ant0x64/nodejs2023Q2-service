@@ -1,4 +1,4 @@
-import { Repository, FindOptionsWhere, DeepPartial } from 'typeorm';
+import { Repository, FindOptionsWhere, DeepPartial, In } from 'typeorm';
 import { Subject } from 'rxjs';
 import { AbstractEntity } from './abstract.entity';
 
@@ -16,6 +16,10 @@ export abstract class AbstractService<T extends AbstractEntity> {
 
   findOne(id: T['id']): Promise<T | null> {
     return this.repository.findOneBy({ id } as FindOptionsWhere<T>);
+  }
+
+  findMany(id: T['id'][]): Promise<T[]> {
+    return this.repository.findBy({ id: In(id) } as FindOptionsWhere<T>);
   }
 
   update(id: T['id'], updateDto: Partial<T>): Promise<T | undefined> {

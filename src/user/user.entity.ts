@@ -13,7 +13,7 @@ import { IsString, IsNotEmpty, IsInt, IsDate, Min } from 'class-validator';
 import { Exclude, Transform } from 'class-transformer';
 
 @Entity({ name: 'users' })
-export class User extends AbstractEntity {
+export class User extends AbstractEntity<User> {
   @Column()
   @IsString()
   @IsNotEmpty()
