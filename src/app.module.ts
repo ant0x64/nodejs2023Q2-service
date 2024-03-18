@@ -20,10 +20,8 @@ config();
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      /** @todo set false for production */
-      synchronize: true,
+      synchronize: process.env.MODE === 'development',
       autoLoadEntities: true,
-      logging: true,
     }),
     UserModule,
     TrackModule,
