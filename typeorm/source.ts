@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
+import { join } from 'node:path';
 
 config();
 
@@ -10,7 +11,6 @@ export const dataSource = new DataSource({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  entities: ['src/**/*.entity.ts'],
-  migrations: ['typeorm/migrations/*.ts'],
+  migrations: [join(__dirname, 'migrations', '*')],
   logging: true,
 });

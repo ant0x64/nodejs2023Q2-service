@@ -1,0 +1,10 @@
+*
+
+!.env
+!nest-cli.json
+!Dockerfile
+!package*.json
+!src/
+!typeorm/
+!tsconfig.build.json
+!tsconfig.json

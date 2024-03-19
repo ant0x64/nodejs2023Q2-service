@@ -1,0 +1,28 @@
+version: '3.8'
+
+networks:
+
+  nestjs-postgres-network:
+    driver: bridge
+
+services:
+
+  postgres-db:
+    image: postgres:16-alpine
+    restart: always
+    env_file: .env
+    networks: 
+      - nestjs-postgres-network
+ 
+  nestjs-app:
+    build: 
+      context: .
+      target: production
+    restart: always
+    env_file: .env
+    ports: 
+      - "8080:${PORT}"
+    networks: 
+      - nestjs-postgres-network
+    depends_on: 
+      - postgres-db
