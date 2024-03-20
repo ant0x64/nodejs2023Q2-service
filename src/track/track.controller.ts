@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { UUIDPipe } from 'src/common/pipes/uuid.pipe';
+import { UUIDPipe } from 'common/pipes/uuid.pipe';
 
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';

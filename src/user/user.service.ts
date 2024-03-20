@@ -1,4 +1,4 @@
-import { AbstractService } from 'src/common/abstract.service';
+import { AbstractService } from 'common/abstract.service';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,7 +13,7 @@ import { validate } from 'class-validator';
 @Injectable()
 export class UserService extends AbstractService<User> {
   @InjectRepository(User)
-  protected repository: Repository<User>;
+  declare repository: Repository<User>;
 
   create(createDto: CreateUserDto) {
     const entity = new User(createDto as User);

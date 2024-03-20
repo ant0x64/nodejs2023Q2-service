@@ -6,7 +6,7 @@ import { Album } from './album.entity';
 import { AlbumService } from './album.service';
 import { AlbumController } from './album.controller';
 
-import { ArtistModule } from 'src/artist/artist.module';
+import { ArtistModule } from 'artist/artist.module';
 
 @Module({
   imports: [ArtistModule, TypeOrmModule.forFeature([Album])],

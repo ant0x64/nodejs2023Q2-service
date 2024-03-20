@@ -1,13 +1,13 @@
-import { AbstractService } from 'src/common/abstract.service';
+import { AbstractService } from 'common/abstract.service';
 
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
-import { ArtistService } from 'src/artist/artist.service';
-import { AlbumService } from 'src/album/album.service';
-import { TrackService } from 'src/track/track.service';
+import { ArtistService } from 'artist/artist.service';
+import { AlbumService } from 'album/album.service';
+import { TrackService } from 'track/track.service';
 import { Favorite } from './favorite.entity';
 
 import { validate } from 'class-validator';

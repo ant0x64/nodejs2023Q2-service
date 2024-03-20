@@ -1,5 +1,5 @@
-import { AbstractEntity } from 'src/common/abstract.entity';
-import { Artist } from 'src/artist/artist.entity';
+import { AbstractEntity } from 'common/abstract.entity';
+import { Artist } from 'artist/artist.entity';
 
 import { ApiProperty } from '@nestjs/swagger';
 import { Entity, Column, ManyToOne } from 'typeorm';

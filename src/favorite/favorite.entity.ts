@@ -1,9 +1,9 @@
-import { AbstractEntity } from 'src/common/abstract.entity';
+import { AbstractEntity } from 'common/abstract.entity';
 
-import { Artist } from 'src/artist/artist.entity';
-import { Album } from 'src/album/album.entity';
-import { Track } from 'src/track/track.entity';
-import { User } from 'src/user/user.entity';
+import { Artist } from 'artist/artist.entity';
+import { Album } from 'album/album.entity';
+import { Track } from 'track/track.entity';
+import { User } from 'user/user.entity';
 
 import { ApiProperty } from '@nestjs/swagger';
 import { Entity, Column, ManyToMany, JoinTable } from 'typeorm';

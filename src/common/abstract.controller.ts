@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 
-import { UUIDPipe } from 'src/common/pipes/uuid.pipe';
+import { UUIDPipe } from 'common/pipes/uuid.pipe';
 
 import { AbstractService } from './abstract.service';
 import { AbstractEntity } from './abstract.entity';

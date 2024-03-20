@@ -6,8 +6,8 @@ import { Track } from './track.entity';
 import { TrackService } from './track.service';
 import { TrackController } from './track.controller';
 
-import { ArtistModule } from 'src/artist/artist.module';
-import { AlbumModule } from 'src/album/album.module';
+import { ArtistModule } from 'artist/artist.module';
+import { AlbumModule } from 'album/album.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Track]), ArtistModule, AlbumModule],

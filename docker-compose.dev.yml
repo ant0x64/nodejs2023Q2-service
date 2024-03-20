@@ -20,8 +20,10 @@ services:
       target: development
     restart: always
     env_file: .env
+    environment:
+      - POSTGRES_HOST=postgres-db
     volumes:
-      - .:/app
+      - ./src:/app/src
     ports: 
       - "${PORT}:${PORT}"
     networks: 

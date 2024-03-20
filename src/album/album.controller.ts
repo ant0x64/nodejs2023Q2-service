@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { UUIDPipe } from 'src/common/pipes/uuid.pipe';
+import { UUIDPipe } from 'common/pipes/uuid.pipe';
 
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';

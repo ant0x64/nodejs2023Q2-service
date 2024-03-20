@@ -1,4 +1,4 @@
-import { AbstractService } from 'src/common/abstract.service';
+import { AbstractService } from 'common/abstract.service';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,7 +13,7 @@ import { validate } from 'class-validator';
 @Injectable()
 export class TrackService extends AbstractService<Track> {
   @InjectRepository(Track)
-  protected repository: Repository<Track>;
+  declare repository: Repository<Track>;
 
   create(createDto: CreateTrackDto) {
     const entity = new Track(createDto as Track);

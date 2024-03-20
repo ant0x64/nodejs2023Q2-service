@@ -11,10 +11,10 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { UUIDPipe } from 'src/common/pipes/uuid.pipe';
+import { UUIDPipe } from 'common/pipes/uuid.pipe';
 import { FavoriteService } from './favorite.service';
 import { Favorite } from './favorite.entity';
-import { User } from 'src/user/user.entity';
+import { User } from 'user/user.entity';
 
 enum endpoints {
   ARTIST = 'artist',
