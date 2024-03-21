@@ -17,7 +17,7 @@ export class ArtistService extends AbstractService<Artist> {
 
   create(createDto: CreateArtistDto) {
     const entity = new Artist(createDto as Artist);
-    validate(entity);
+    validate(entity, { forbidUnknownValues: true });
 
     return this.repository.save(entity);
   }

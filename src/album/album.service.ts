@@ -17,7 +17,7 @@ export class AlbumService extends AbstractService<Album> {
 
   create(createDto: CreateAlbumDto) {
     const entity = new Album(createDto as Album);
-    validate(entity);
+    validate(entity, { forbidUnknownValues: true });
 
     return this.repository.save(entity);
   }

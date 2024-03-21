@@ -17,7 +17,7 @@ export class TrackService extends AbstractService<Track> {
 
   create(createDto: CreateTrackDto) {
     const entity = new Track(createDto as Track);
-    validate(entity);
+    validate(entity, { forbidUnknownValues: true });
 
     return this.repository.save(entity);
   }

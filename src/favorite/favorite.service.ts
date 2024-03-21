@@ -42,7 +42,7 @@ export class FavoriteService extends AbstractService<Favorite> {
       tracks: [],
       ...createDto,
     });
-    validate(entity);
+    validate(entity, { forbidUnknownValues: true });
 
     return this.repository.save(entity);
   }

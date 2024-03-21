@@ -17,7 +17,7 @@ export class UserService extends AbstractService<User> {
 
   create(createDto: CreateUserDto) {
     const entity = new User(createDto as User);
-    validate(entity);
+    validate(entity, { forbidUnknownValues: true });
 
     return this.repository.save(entity);
   }
