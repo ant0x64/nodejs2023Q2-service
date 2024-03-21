@@ -1,0 +1,12 @@
+FROM postgres:16-alpine as db
+
+ENV POSTGRES_LOG_DIR='/var/log/postgres'
+RUN \
+    echo 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"' > /docker-entrypoint-initdb.d/create-uuid-extension.sql && \
+    mkdir ${POSTGRES_LOG_DIR} && \
+    chown postgres:postgres ${POSTGRES_LOG_DIR} && \
+    mkdir -p /etc/postgresql/ && \
+    cp /usr/local/share/postgresql/postgresql.conf.sample /etc/postgresql/postgresql.conf && \
+    echo "log_directory='${POSTGRES_LOG_DIR}'" >> /etc/postgresql/postgresql.conf
+
+CMD ["postgres", "-c", "logging_collector=on", "-c", "config_file=/etc/postgresql/postgresql.conf"]

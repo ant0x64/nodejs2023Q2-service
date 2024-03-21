@@ -5,18 +5,27 @@ networks:
   nestjs-postgres-network:
     driver: bridge
 
+volumes:
+  postgres-data:
+  postgres-logs:
+
 services:
 
   postgres-db:
-    image: postgres:16-alpine
+  
+    build: 
+      dockerfile: Dockerfile.db
     restart: always
     env_file: .env
     networks: 
       - nestjs-postgres-network
- 
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - postgres-logs:${POSTGRES_LOG_DIR}
+    
   nestjs-app:
     build: 
-      context: .
+      dockerfile: Dockerfile.app
       target: production
     restart: always
     env_file: .env
@@ -28,5 +37,3 @@ services:
       - nestjs-postgres-network
     depends_on: 
       - postgres-db
-    volumes:
-      - ./package.json:/app/package.json
