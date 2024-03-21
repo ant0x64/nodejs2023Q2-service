@@ -37,6 +37,9 @@ export class FavoriteService extends AbstractService<Favorite> {
 
   create(createDto: Partial<Favorite>) {
     const entity = new Favorite({
+      artists: [],
+      albums: [],
+      tracks: [],
       ...createDto,
     });
     validate(entity);
