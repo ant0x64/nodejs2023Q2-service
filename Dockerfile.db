@@ -9,4 +9,6 @@ RUN \
     cp /usr/local/share/postgresql/postgresql.conf.sample /etc/postgresql/postgresql.conf && \
     echo "log_directory='${POSTGRES_LOG_DIR}'" >> /etc/postgresql/postgresql.conf
 
+VOLUME $POSTGRES_LOG_DIR
+
 CMD ["postgres", "-c", "logging_collector=on", "-c", "config_file=/etc/postgresql/postgresql.conf"]

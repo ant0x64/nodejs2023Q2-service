@@ -13,8 +13,7 @@ services:
 
   postgres-db:
   
-    build: 
-      dockerfile: Dockerfile.db
+    image: ant0x64/nodejs-service_db:latest
     restart: always
     env_file: .env
     networks: 

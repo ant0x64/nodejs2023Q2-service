@@ -13,8 +13,7 @@ services:
 
   postgres-db:
   
-    build: 
-      dockerfile: Dockerfile.db
+    image: ant0x64/nodejs-service_db:latest
     restart: always
     env_file: .env
     networks: 
@@ -24,9 +23,7 @@ services:
       - postgres-logs:${POSTGRES_LOG_DIR}
     
   nestjs-app:
-    build: 
-      dockerfile: Dockerfile.app
-      target: production
+    image: ant0x64/nodejs-service_app:latest
     restart: always
     env_file: .env
     environment:
