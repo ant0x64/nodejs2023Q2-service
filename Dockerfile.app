@@ -9,10 +9,10 @@ CMD ["npm", "run", "start:dev"]
 
 FROM development as build
 RUN npm install -g \
-   @nestjs/cli@$(node -pe "require('./package-lock.json').packages[''].devDependencies['@nestjs/cli']") && \
-   npm ci --omit=dev --omit=optional && \
-   npm run build && \
-   mkdir /build && mv package*.json node_modules dist /build
+    @nestjs/cli@$(node -pe "require('./package-lock.json').packages[''].devDependencies['@nestjs/cli']") && \
+    npm ci --omit=dev --omit=optional && \
+    npm run build && \
+    mkdir /build && mv package*.json node_modules dist /build
 
 FROM node as production
 WORKDIR /app

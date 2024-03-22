@@ -23,7 +23,8 @@
     "typeorm:dev": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d typeorm/source.ts",
     "typeorm:prod": "node node_modules/typeorm/cli.js -d dist/typeorm/source.js",
     "typeorm:migrate": "npm run typeorm:prod -- migration:run",
-    "typeorm:migration:generate": "npm run typeorm:dev -- migration:generate"
+    "typeorm:migration:generate": "npm run typeorm:dev -- migration:generate",
+    "docker:scout": "docker scout cves ant0x64/nodejs-service_db:latest && docker scout cves ant0x64/nodejs-service_app:latest"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",

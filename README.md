@@ -138,26 +138,35 @@ npm run typeorm:migrate #run
 ```
 
 
-## Docker Scout Testing
+## Vulnerabilities Testing using Docker Scout
 
-To test Docker images using [Docker Scout](https://docs.docker.com/scout/install/), follow these steps:
+To test Docker images follow these steps:
 
-   1. **Installation**: Ensure Docker Scout is installed in your development environment.
+### Installation 
 
-   2. **Run Docker Scout**: Execute Docker Scout, specifying the Docker image you wish to test.
+Ensure Docker Scout is installed in your local environment alongside [Docker Desktop](https://www.docker.com/products/docker-desktop/) or install it manually using the [documentation](https://docs.docker.com/scout/install/).
 
-      ```bash
-      docker scout cves <image_name>
-      ```
-
-      Replace `<image_name>` with the name of the Docker image you want to test.
-
-   3. **Monitor Results**: Docker Scout will analyze the image and provide insights into its performance, security, and best practices compliance.
-
-   4. **Act on Findings**: Review the test results and take necessary actions to address any issues or improvements identified.
+Additionally you can use [Docker Scount CLI image](https://hub.docker.com/r/docker/scout-cli) to run the application in a container:
+```bash
+docker run -it \
+  -e DOCKER_SCOUT_HUB_USER=<your Docker Hub user name> \
+  -e DOCKER_SCOUT_HUB_PASSWORD=<your Docker Hub PAT>  \
+  docker/scout-cli <sub command>
+```
 
 
-## Testing Scripts
+### Run Docker Scout: 
+- To simplify scanning the app images you can run the npm command:
+     ```bash
+     npm run docker:scout
+     ```
+- or specifying Docker images you wish to test manually:  
+     ```bash
+     docker scout cves <image_name>
+     ```
+
+
+## Application Testing Scripts
 
 The source code includes testing scripts that can be executed from the root directory after launching the application. Simply run the command `npm test` to initiate the testing process.
 
