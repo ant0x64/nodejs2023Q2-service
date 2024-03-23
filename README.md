@@ -46,7 +46,7 @@ export POSTGRES_DB=database
 export POSTGRES_USER=user
 export POSTGRES_PASSWORD=password
 
-# create Network
+# create network
 docker network create home_library_service
 
 # run database container
@@ -82,7 +82,7 @@ cp .env.example .env
 
 #### Production ENV
 ```bash
-# run
+# up
 docker-compose -f docker-compose.prod.yml up -d
 
 # down
@@ -90,12 +90,12 @@ docker-compose -f docker-compose.prod.yml down --volumes
 ```
 
 #### Development ENV
-**Caution**: application image is built locally based on `Dockerfile.app`
+**Caution**: this method involves buiding the application image locally based on `Dockerfile.app`
 
-*Note*: `src` directory is automatically bind as a container's volume, and the application restarts upon any changes made to it.
+*Note*: `src` directory is automatically bound as a container's volume, and the application restarts upon any changes made to it.
 
 ```bash
-# run
+# up
 docker-compose -f docker-compose.dev.yml up -d
 
 # down
@@ -104,7 +104,7 @@ docker-compose -f docker-compose.dev.yml down --volumes
 
 ### Local Machine Environment
 
-**Caution**: Postgres database must be pre-installed and available
+**Caution**: Postgres database must be pre-installed and accessible on the configured `POSTGRES_PORT`
 
 #### Installation
 ```bash
@@ -132,9 +132,14 @@ npm run start:prod
 
 #### TypeORM Migrations
 
+*Note*: The source is located at the path `<root_dir>/typeorm/source.ts`
+
 ```bash
-npm run typeorm:migration:generate Name #generate
-npm run typeorm:migrate #run
+# generate
+npm run typeorm:migration:generate <name>
+
+#run
+npm run typeorm:migrate
 ```
 
 
@@ -156,11 +161,11 @@ docker run -it \
 
 
 ### Run Docker Scout: 
-- To simplify scanning the app images you can run the npm command:
+- To simplify scanning the app's images you can run the npm command:
      ```bash
      npm run docker:scout
      ```
-- or specifying Docker images you wish to test manually:  
+- or test manually specifying Docker images you wish:  
      ```bash
      docker scout cves <image_name>
      ```
