@@ -69,7 +69,7 @@ export class FavoriteService extends AbstractService<Favorite> {
       fav[entity] = [];
     }
 
-    (fav[entity] as typeof item[]).push(item);
+    (fav[entity] as (typeof item)[]).push(item);
     return this.repository.save(fav);
   }
 
