@@ -1,5 +1,4 @@
 import {
-  Controller,
   Get,
   Post,
   Body,
@@ -11,53 +10,68 @@ import {
   NotFoundException,
   Put,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 
 import { UUIDPipe } from 'common/pipes/uuid.pipe';
 
-import { Artist } from './artist.entity';
-import { ArtistService } from './artist.service';
-import { CreateArtistDto } from './dto/create-artist.dto';
-import { UpdateArtistDto } from './dto/update-artist.dto';
+import { AbstractService } from './abstract.service';
+import { AbstractEntity } from './abstract.entity';
+
+const DynamicResponseType = (params) => {
+  return function (
+    target: AbstractController<any>,
+    propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ) {
+    if (target.getEntity) {
+      const entity = target.getEntity();
+      params.type = params.array ? [entity] : entity;
+    }
+
+    return ApiResponse(params)(target, propertyKey, descriptor);
+  };
+};
 
 @UseInterceptors(ClassSerializerInterceptor)
-@Controller('artist')
-@ApiTags('Artists')
-export class ArtistController {
-  constructor(private readonly service: ArtistService) {}
+export abstract class AbstractController<
+  E extends AbstractEntity,
+  S extends AbstractService<E> = AbstractService<E>,
+> {
+  protected service: S;
+
+  abstract getEntity(): E;
 
   @Post()
-  @ApiOperation({ summary: 'Create artist' })
-  @ApiResponse({
+  @ApiOperation({ summary: 'Create entity' })
+  @DynamicResponseType({
     status: 201,
-    description: 'The artist has been created.',
-    type: Artist,
+    description: 'The entity has been created.',
   })
   @ApiResponse({
     status: 400,
     description: 'Does not contain required fields',
   })
-  create(@Body() createDto: CreateArtistDto) {
+  create(@Body() createDto: Partial<E>) {
     return this.service.create(createDto);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all artists' })
-  @ApiResponse({ status: 200, type: [Artist] })
+  @ApiOperation({ summary: 'Get all entitys' })
+  @DynamicResponseType({ status: 200, array: true })
   findAll() {
     return this.service.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get single artist by id' })
+  @ApiOperation({ summary: 'Get single entity by id' })
   @ApiParam({
     name: 'id',
     format: 'uuid',
-    description: 'The ID of the artist',
+    description: 'The ID of the entity',
   })
-  @ApiResponse({ status: 200, type: Artist })
+  @DynamicResponseType({ status: 200 })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
-  @ApiResponse({ status: 404, description: 'Artist not found' })
+  @ApiResponse({ status: 404, description: 'Entity not found' })
   async findOne(@Param('id', UUIDPipe) id: string) {
     const entity = await this.service.findOne(id);
     if (!entity) {
@@ -67,18 +81,18 @@ export class ArtistController {
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Update artist' })
+  @ApiOperation({ summary: 'Update entity' })
   @ApiParam({
     name: 'id',
     format: 'uuid',
-    description: 'The ID of the artist',
+    description: 'The ID of the entity',
   })
-  @ApiResponse({ status: 200, type: Artist })
+  @DynamicResponseType({ status: 200 })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
-  @ApiResponse({ status: 404, description: 'Artist not found' })
+  @ApiResponse({ status: 404, description: 'Entity not found' })
   async update(
     @Param('id', UUIDPipe) id: string,
-    @Body() updateDto: UpdateArtistDto,
+    @Body() updateDto: Partial<E>,
   ) {
     const entity = await this.service.findOne(id);
     if (!entity) {
@@ -89,15 +103,15 @@ export class ArtistController {
 
   @Delete(':id')
   @HttpCode(204)
-  @ApiOperation({ summary: 'Delete artist' })
+  @ApiOperation({ summary: 'Delete entity' })
   @ApiParam({
     name: 'id',
     format: 'uuid',
-    description: 'The ID of the artist',
+    description: 'The ID of the entity',
   })
   @ApiResponse({ status: 204, description: 'Successful' })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
-  @ApiResponse({ status: 404, description: 'Artist not found' })
+  @ApiResponse({ status: 404, description: 'Entity not found' })
   async remove(@Param('id', UUIDPipe) id: string) {
     const entity = await this.service.findOne(id);
     if (!entity) {

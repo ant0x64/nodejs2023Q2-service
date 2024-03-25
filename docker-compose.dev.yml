@@ -1,0 +1,41 @@
+version: '3.8'
+
+networks:
+
+  nestjs-postgres-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  postgres-logs:
+
+services:
+
+  postgres-db:
+  
+    image: ant0x64/nodejs-service_db:latest
+    restart: always
+    env_file: .env
+    networks: 
+      - nestjs-postgres-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - postgres-logs:${POSTGRES_LOG_DIR}
+ 
+  nestjs-app-dev:
+    image: ant0x64/nodejs-service_app:dev
+    # build: 
+    #   dockerfile: Dockerfile.app
+    #   target: development
+    restart: always
+    env_file: .env
+    environment:
+      - POSTGRES_HOST=postgres-db
+    volumes:
+      - ./src:/app/src
+    ports: 
+      - "${PORT}:${PORT}"
+    networks: 
+      - nestjs-postgres-network
+    depends_on: 
+      - postgres-db
