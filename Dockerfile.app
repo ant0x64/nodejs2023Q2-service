@@ -3,11 +3,13 @@ FROM node:20-alpine as node
 FROM node as development
 WORKDIR /app
 COPY . .
-RUN npm install && \
+RUN npm install --omit=optional && \
     npm cache clean --force
+VOLUME [ "/app/src" ]
 CMD ["npm", "run", "start:dev"]
 
-FROM development as build
+FROM node as build
+COPY . .
 RUN npm install -g \
     @nestjs/cli@$(node -pe "require('./package-lock.json').packages[''].devDependencies['@nestjs/cli']") && \
     npm ci --omit=dev --omit=optional && \
