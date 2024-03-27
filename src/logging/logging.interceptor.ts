@@ -6,27 +6,47 @@ import {
 } from '@nestjs/common';
 
 import { LoggingService } from './logging.service';
-import { EOL } from 'os';
+import { IncomingMessage, ServerResponse } from 'http';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   constructor(private logger: LoggingService) {
     this.logger.setContext(this.constructor.name);
   }
+
   intercept(context: ExecutionContext, next: CallHandler) {
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = context.switchToHttp().getRequest<IncomingMessage>();
+    const response = context.switchToHttp().getResponse<ServerResponse>();
 
-    this.logger.log(
-      'Request Recieved' +
-        EOL +
-        `URL: ${request.url}` +
-        EOL +
-        (typeof request['params'] === 'object'
-          ? `PARAMS: ${JSON.stringify(request['params'])}` + EOL
-          : '') +
-        `BODY: ${JSON.stringify(request.body)}`,
-    );
+    let requestData = '';
+    request.on('data', (chunk) => {
+      requestData += chunk.toString();
+    });
 
-    return next.handle();
+    request.once('end', () => {
+      this.logger.log(
+        'Incomming Request: ' +
+          JSON.stringify({
+            controller: context.getClass()?.name,
+            method: request.method,
+            url: request.url,
+            params: request['params'] || '',
+            body: requestData,
+          }),
+      );
+    });
+
+    response.once('finish', () => {
+      setImmediate(() => {
+        this.logger.log(
+          'Server Responce: ' +
+            JSON.stringify({
+              code: response.statusCode,
+            }),
+        );
+      });
+    });
+
+    return next.handle().pipe();
   }
 }

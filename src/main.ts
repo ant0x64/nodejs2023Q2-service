@@ -15,7 +15,6 @@ async function bootstrap() {
 
   const logger = app.get(LoggingService);
 
-  app.useLogger(logger);
   app.useGlobalInterceptors(new LoggingInterceptor(logger));
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
