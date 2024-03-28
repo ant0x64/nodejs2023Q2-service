@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
 
 import { LoggingService } from './logging.service';
@@ -9,6 +9,7 @@ import { LoggingFilter } from './logging.filter';
   exports: [LoggingService],
   providers: [
     LoggingService,
+    ConsoleLogger,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
