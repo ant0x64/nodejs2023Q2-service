@@ -4,8 +4,8 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-
 import { LoggingService } from './logging.service';
+
 import { IncomingMessage, ServerResponse } from 'http';
 
 @Injectable()
@@ -41,7 +41,8 @@ export class LoggingInterceptor implements NestInterceptor {
         this.logger.log(
           'Server Responce: ' +
             JSON.stringify({
-              code: response.statusCode,
+              status: response.statusCode,
+              message: response.statusMessage,
             }),
         );
       });
