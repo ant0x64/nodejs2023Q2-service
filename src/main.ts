@@ -7,7 +7,9 @@ import { LoggingService } from 'logging/logging.service';
 import { enableSwagger } from 'swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
   enableSwagger(app);
 
   const logger = await app.resolve(LoggingService);

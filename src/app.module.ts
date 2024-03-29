@@ -1,7 +1,7 @@
-import { config } from 'dotenv';
-
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { ConfigModule } from '@nestjs/config';
 
 import { UserModule } from 'user/user.module';
 import { TrackModule } from 'track/track.module';
@@ -11,10 +11,9 @@ import { FavoriteModule } from 'favorite/favorite.module';
 
 import { LoggingModule } from 'logging/logging.module';
 
-config();
-
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
