@@ -8,7 +8,8 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { LoggingService } from './logging.service';
-import { ServerResponse } from 'http';
+
+import { ServerResponse } from 'node:http';
 
 @Catch()
 @Injectable()

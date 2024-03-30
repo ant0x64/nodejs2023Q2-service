@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { FileHandle, open, rename } from 'node:fs/promises';
 import { EOL } from 'node:os';
 
-export default class FileWritter extends Writable {
+export default class LogsWritter extends Writable {
   protected max_size: number;
   protected path: string;
 

@@ -1,16 +1,14 @@
 import { ConsoleLogger, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
 
-import { ConfigModule } from '@nestjs/config';
-
 import { LoggingService } from './logging.service';
 import { LoggingInterceptor } from './logging.interceptor';
 import { LoggingFilter } from './logging.filter';
 
-import FileWritter from './utils/file-writter';
+import LogsWritter from './lib/logs-writter';
 
 @Module({
-  imports: [ConfigModule.forRoot()],
+  imports: [],
   exports: [LoggingService],
   providers: [
     LoggingService,
@@ -25,11 +23,11 @@ import FileWritter from './utils/file-writter';
     },
     {
       provide: 'WRITTER_DEBUG',
-      useValue: new FileWritter('debug'),
+      useValue: new LogsWritter('debug'),
     },
     {
       provide: 'WRITTER_ERROR',
-      useValue: new FileWritter('error'),
+      useValue: new LogsWritter('error'),
     },
   ],
 })
@@ -38,6 +36,7 @@ export class LoggingModule {
     process.on('unhandledRejection', () => {
       this.logging.error('Unhandled Rejection');
     });
+
     process.on('uncaughtException', (error: Error) => {
       this.logging.error('Unhandled Exception: ' + error.stack);
     });
