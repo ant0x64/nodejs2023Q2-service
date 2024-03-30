@@ -14,7 +14,7 @@ import { Exclude, Transform } from 'class-transformer';
 
 @Entity({ name: 'users' })
 export class User extends AbstractEntity<User> {
-  @Column()
+  @Column(/*{ unique: true }*/)
   @IsString()
   @IsNotEmpty()
   @ApiProperty()

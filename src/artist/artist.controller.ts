@@ -5,8 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  UseInterceptors,
-  ClassSerializerInterceptor,
   HttpCode,
   NotFoundException,
   Put,
@@ -20,7 +18,6 @@ import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('artist')
 @ApiTags('Artists')
 export class ArtistController {

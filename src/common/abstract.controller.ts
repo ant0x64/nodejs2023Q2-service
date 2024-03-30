@@ -4,8 +4,6 @@ import {
   Body,
   Param,
   Delete,
-  UseInterceptors,
-  ClassSerializerInterceptor,
   HttpCode,
   NotFoundException,
   Put,
@@ -32,7 +30,6 @@ const DynamicResponseType = (params) => {
   };
 };
 
-@UseInterceptors(ClassSerializerInterceptor)
 export abstract class AbstractController<
   E extends AbstractEntity,
   S extends AbstractService<E> = AbstractService<E>,

@@ -5,8 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  UseInterceptors,
-  ClassSerializerInterceptor,
   HttpCode,
   NotFoundException,
   Put,
@@ -22,7 +20,6 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './album.entity';
 
 @ApiTags('Albums')
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('album')
 export class AlbumController {
   constructor(private readonly service: AlbumService) {}

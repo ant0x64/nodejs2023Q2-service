@@ -4,9 +4,7 @@ import {
   Post,
   Param,
   Delete,
-  UseInterceptors,
   HttpCode,
-  ClassSerializerInterceptor,
   ParseEnumPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -22,7 +20,6 @@ enum endpoints {
   TRACK = 'track',
 }
 
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('favs')
 @ApiTags('Favorites')
 export class FavoriteController {

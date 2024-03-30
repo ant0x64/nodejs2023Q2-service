@@ -5,8 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  UseInterceptors,
-  ClassSerializerInterceptor,
   HttpCode,
   NotFoundException,
   Put,
@@ -23,7 +21,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 import { User } from './user.entity';
 
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 @ApiTags('Users')
 export class UserController {

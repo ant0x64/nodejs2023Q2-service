@@ -21,4 +21,8 @@ export class UserService extends AbstractService<User> {
 
     return this.repository.save(entity);
   }
+
+  findByLogin(login: User['login']) {
+    return this.repository.findOne({ where: { login } });
+  }
 }

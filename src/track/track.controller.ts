@@ -5,8 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  UseInterceptors,
-  ClassSerializerInterceptor,
   HttpCode,
   NotFoundException,
   Put,
@@ -21,7 +19,6 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 
 import { Track } from './track.entity';
 
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('track')
 @ApiTags('Tracks')
 export class TrackController {
