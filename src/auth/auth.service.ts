@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+import { JwtPayload } from './auth.interface';
+
 import { User } from 'user/user.entity';
 import { UserService } from 'user/user.service';
 
@@ -21,17 +23,19 @@ export class AuthService {
   }
 
   generateToken(user: User): string {
-    return this.jwtService.sign(
-      { sub: user.id, username: user.login },
-      { expiresIn: process.env.TOKEN_EXPIRE_TIME || '60s' },
-    );
+    return this.jwtService.sign(this.generatePayload(user), {
+      expiresIn: process.env.TOKEN_EXPIRE_TIME || '60s',
+    });
   }
 
   generateRefreshToken(user: User): string {
-    return this.jwtService.sign(
-      { sub: user.id, username: user.login },
-      { expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME || '1h' },
-    );
+    return this.jwtService.sign(this.generatePayload(user), {
+      expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME || '1h',
+    });
+  }
+
+  private generatePayload(user: User): JwtPayload {
+    return { sub: user.id, userId: user.id, login: user.login };
   }
 
   revokeToken(_: string) {

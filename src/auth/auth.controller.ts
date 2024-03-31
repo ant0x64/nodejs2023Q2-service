@@ -3,9 +3,13 @@ import {
   Controller,
   ForbiddenException,
   HttpCode,
+  PipeTransform,
   Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
+  ApiBody,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -61,7 +65,16 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(200)
+  @UsePipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      errorHttpStatusCode: 401,
+      groups: ['unauthorized'],
+    }),
+  )
   @ApiOperation({ summary: 'Refresh Token' })
+  @ApiBody({ type: RefreshTokenDto })
   @ApiResponse({ status: 200, type: TokenDto })
   async refresh(@Body() refreshTokenDto: RefreshTokenDto): Promise<TokenDto> {
     const id = this.authService.verifyToken(refreshTokenDto.refreshToken);

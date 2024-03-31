@@ -21,7 +21,6 @@ export class TokenDto {
 
 export class RefreshTokenDto {
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ groups: ['unauthorized'] })
   refreshToken: string;
 }
