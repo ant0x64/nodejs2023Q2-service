@@ -89,7 +89,7 @@ export class UserController {
     @Body() updateUserPasswordDto: UpdateUserPasswordDto,
   ) {
     const entity = await this.findOne(id);
-    if (updateUserPasswordDto.oldPassword !== entity.password) {
+    if (!(await entity.checkPassword(updateUserPasswordDto.oldPassword))) {
       throw new ForbiddenException();
     }
     return this.service.update(id, {

@@ -7,10 +7,12 @@ import {
   VersionColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
 } from 'typeorm';
 
 import { IsString, IsNotEmpty, IsInt, IsDate, Min } from 'class-validator';
 import { Exclude, Transform } from 'class-transformer';
+import { HashService } from 'common/services/hash.service';
 
 @Entity({ name: 'users' })
 export class User extends AbstractEntity<User> {
@@ -19,6 +21,15 @@ export class User extends AbstractEntity<User> {
   @IsNotEmpty()
   @ApiProperty()
   login: string;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await HashService.hash(this.password);
+  }
+
+  async checkPassword(password) {
+    return await HashService.compare(password, this.password);
+  }
 
   @Column()
   @IsString()
