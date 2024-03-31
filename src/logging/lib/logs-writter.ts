@@ -8,7 +8,7 @@ export default class LogsWritter extends Writable {
   protected max_size: number;
   protected path: string;
 
-  protected _fd: FileHandle | undefined;
+  private _fd: FileHandle | undefined;
 
   constructor(type: 'debug' | 'error' = 'debug') {
     super();

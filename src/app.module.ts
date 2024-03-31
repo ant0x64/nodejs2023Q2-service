@@ -1,7 +1,7 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 import { UserModule } from 'user/user.module';
 import { TrackModule } from 'track/track.module';
@@ -10,8 +10,9 @@ import { AlbumModule } from 'album/album.module';
 import { FavoriteModule } from 'favorite/favorite.module';
 
 import { LoggingModule } from 'logging/logging.module';
-import { AuthModule } from './auth/auth.module';
+
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [

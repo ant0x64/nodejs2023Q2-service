@@ -30,6 +30,7 @@ enum endpoints {
 @ApiTags('Favorites')
 @ApiBearerAuth()
 export class FavoriteController {
+  // @todo
   protected blank_user: User['id'] = '0fa85f64-5717-4562-b3fc-2c963f66afa6';
   protected favorite: Favorite;
 
