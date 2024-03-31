@@ -53,7 +53,7 @@ export class AuthController {
   @ApiResponse({ status: 403, description: 'Wrong Credentials' })
   async login(@Body() loginUserDto: LoginUserDto): Promise<TokenDto> {
     const user = await this.userService.findByLogin(loginUserDto.login);
-    if (!(await user.checkPassword(loginUserDto.password))) {
+    if (!user || !(await user.checkPassword(loginUserDto.password))) {
       throw new ForbiddenException();
     }
 
