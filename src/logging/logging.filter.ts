@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { LoggingService } from './logging.service';
 
-import { ServerResponse } from 'node:http';
+import { IncomingMessage, ServerResponse } from 'node:http';
 
 @Catch()
 @Injectable()
@@ -18,11 +18,9 @@ export class LoggingFilter implements ExceptionFilter<HttpException> {
     this.logger.setContext(this.constructor.name);
   }
   catch(exception: Error | undefined, host: ArgumentsHost) {
-    this.logger.error(
-      exception?.message || 'Unexpected Error' + exception?.stack,
-    );
-
+    const request = host.switchToHttp().getRequest<IncomingMessage>();
     const response = host.switchToHttp().getResponse<ServerResponse>();
+
     const responseBody =
       exception && exception['response']
         ? exception['response']
@@ -34,9 +32,36 @@ export class LoggingFilter implements ExceptionFilter<HttpException> {
     response.statusCode =
       (exception && exception['status']) || HttpStatus.INTERNAL_SERVER_ERROR;
 
+    if (!request.headers['x-intercepted']) {
+      this.logger.log(
+        'Incomming Request: ' +
+          JSON.stringify({
+            controller: 'no-controller',
+            method: request.method,
+            url: request.url,
+            params: request['params'] || '',
+            body: request['body'] || '',
+          }),
+      );
+    }
+
+    this.logger.error(
+      exception?.message || 'Unexpected Error' + exception?.stack,
+    );
+
     response.setHeader('Content-Type', 'text/json');
     response.write(JSON.stringify(responseBody));
 
     response.end();
+
+    if (!request.headers['x-intercepted']) {
+      this.logger.log(
+        'Server Responce: ' +
+          JSON.stringify({
+            status: response.statusCode,
+            message: response.statusMessage,
+          }),
+      );
+    }
   }
 }
