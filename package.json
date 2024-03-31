@@ -2,9 +2,9 @@
   "name": "home-library",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "ant0x64",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build && nest build -p tsconfig.typeorm.json",
@@ -20,10 +20,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "typeorm:dev": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d typeorm/source.ts",
+    "typeorm:dev": "ts-node ./node_modules/typeorm/cli.js -d typeorm/source.ts",
     "typeorm:prod": "node node_modules/typeorm/cli.js -d dist/typeorm/source.js",
     "typeorm:migrate": "npm run typeorm:prod -- migration:run",
-    "typeorm:migration:generate": "npm run typeorm:dev -- migration:generate",
+    "typeorm:generate": "npm run typeorm:dev -- migration:generate",
     "docker:scout": "docker scout cves ant0x64/nodejs-service_db:latest && docker scout cves ant0x64/nodejs-service_app:latest"
   },
   "dependencies": {

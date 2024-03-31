@@ -136,7 +136,7 @@ npm run start:prod
 
 ```bash
 # generate
-npm run typeorm:migration:generate <name>
+npm run typeorm:generate <name>
 
 #run
 npm run typeorm:migrate
