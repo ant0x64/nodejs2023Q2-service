@@ -9,6 +9,10 @@ export const enableSwagger = (app: INestApplication): void => {
       app,
       new DocumentBuilder()
         .addServer('/')
+        .addBearerAuth({
+          bearerFormat: 'JWT',
+          type: 'http',
+        })
         .setTitle('Home music library service')
         .build(),
     ),

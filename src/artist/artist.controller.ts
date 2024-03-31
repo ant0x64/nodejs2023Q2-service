@@ -9,7 +9,13 @@ import {
   NotFoundException,
   Put,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { UUIDPipe } from 'common/pipes/uuid.pipe';
 
@@ -20,6 +26,7 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Controller('artist')
 @ApiTags('Artists')
+@ApiBearerAuth()
 export class ArtistController {
   constructor(private readonly service: ArtistService) {}
 

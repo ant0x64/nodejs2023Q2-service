@@ -7,7 +7,13 @@ import {
   HttpCode,
   ParseEnumPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { UUIDPipe } from 'common/pipes/uuid.pipe';
 import { FavoriteService } from './favorite.service';
@@ -22,6 +28,7 @@ enum endpoints {
 
 @Controller('favs')
 @ApiTags('Favorites')
+@ApiBearerAuth()
 export class FavoriteController {
   protected blank_user: User['id'] = '0fa85f64-5717-4562-b3fc-2c963f66afa6';
   protected favorite: Favorite;

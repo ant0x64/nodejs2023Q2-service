@@ -10,7 +10,13 @@ import {
   Put,
   ForbiddenException,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { UUIDPipe } from 'common/pipes/uuid.pipe';
 
@@ -23,6 +29,7 @@ import { User } from './user.entity';
 
 @Controller('user')
 @ApiTags('Users')
+@ApiBearerAuth()
 export class UserController {
   constructor(private readonly service: UserService) {}
 

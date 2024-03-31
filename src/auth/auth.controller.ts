@@ -5,7 +5,12 @@ import {
   HttpCode,
   Post,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 import { Public } from './auth.decorator';
 import { AuthService } from './auth.service';
@@ -17,6 +22,7 @@ import { User } from 'user/user.entity';
 @Public()
 @Controller('auth')
 @ApiTags('Auth')
+@ApiUnauthorizedResponse()
 export class AuthController {
   constructor(
     protected authService: AuthService,
