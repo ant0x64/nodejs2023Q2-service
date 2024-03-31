@@ -3,18 +3,11 @@ import {
   Controller,
   ForbiddenException,
   HttpCode,
-  PipeTransform,
   Post,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import {
-  ApiBody,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Public } from './auth.decorator';
 import { AuthService } from './auth.service';
@@ -26,7 +19,6 @@ import { User } from 'user/user.entity';
 @Public()
 @Controller('auth')
 @ApiTags('Auth')
-@ApiUnauthorizedResponse()
 export class AuthController {
   constructor(
     protected authService: AuthService,
@@ -37,7 +29,7 @@ export class AuthController {
   @HttpCode(201)
   @ApiOperation({ summary: 'User Sign Up' })
   @ApiResponse({ status: 201, description: 'Registered' })
-  @ApiResponse({ status: 400 })
+  @ApiResponse({ status: 400, description: 'Invalid DTO' })
   async sign(@Body() createUserDto: CreateUserDto): Promise<User> {
     return (
       (await this.userService.findByLogin(createUserDto.login)) ||
@@ -49,7 +41,7 @@ export class AuthController {
   @HttpCode(200)
   @ApiOperation({ summary: 'User Sign In' })
   @ApiResponse({ status: 200, type: TokenDto })
-  @ApiResponse({ status: 400 })
+  @ApiResponse({ status: 400, description: 'Invalid DTO' })
   @ApiResponse({ status: 403, description: 'Wrong Credentials' })
   async login(@Body() loginUserDto: LoginUserDto): Promise<TokenDto> {
     const user = await this.userService.findByLogin(loginUserDto.login);
@@ -76,6 +68,8 @@ export class AuthController {
   @ApiOperation({ summary: 'Refresh Token' })
   @ApiBody({ type: RefreshTokenDto })
   @ApiResponse({ status: 200, type: TokenDto })
+  @ApiResponse({ status: 401, description: 'Invalid DTO' })
+  @ApiResponse({ status: 403, description: 'Wrong Credentials' })
   async refresh(@Body() refreshTokenDto: RefreshTokenDto): Promise<TokenDto> {
     const id = this.authService.verifyToken(refreshTokenDto.refreshToken);
 
