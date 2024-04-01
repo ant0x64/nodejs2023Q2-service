@@ -51,6 +51,7 @@ export POSTGRES_HOST=home_library_service_db
 export POSTGRES_DB=database
 export POSTGRES_USER=user
 export POSTGRES_PASSWORD=password
+export LOG_LEVEL=debug
 export CRYPT_SALT=10
 export JWT_SECRET_KEY=secret123123
 export JWT_SECRET_REFRESH_KEY=secret123123
@@ -77,6 +78,7 @@ docker run --detach \
   -e POSTGRES_DB=$POSTGRES_DB \
   -e POSTGRES_USER=$POSTGRES_USER \
   -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+  -e LOG_LEVEL=$LOG_LEVEL \
   --network home_library_service \
   ant0x64/nodejs-service_app:latest
 ```
