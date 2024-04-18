@@ -1,4 +1,4 @@
-# Home Library REST API Service
+# Home Library Node REST API Service
 
 The service is powered by the [Nest.js framework](https://github.com/nestjs/nest), implementing a CRUD RESTful API with a focus on modularity and architectural coherence. The application utilizes [RxJS](https://github.com/ReactiveX/rxjs) to enable reactive programming principles and [TypeORM](https://github.com/typeorm/typeorm) to define and manage database entities and relationships using object-relational mapping (ORM) techniques.
 
@@ -6,38 +6,24 @@ The service is powered by the [Nest.js framework](https://github.com/nestjs/nest
 
 To streamline the development and deployment process, environment configuration, Docker containers, and orchestration files are included in the repository.
 
+Task Assignments:
+1. [REST API Service](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/rest-service/assignment.md)
+2. [Containerization, Docker and Database & ORM](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/containerization-database-orm/assignment.md)
+3. [Logging & Error Handling, Authentication, Authorization](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/logging-error-authentication-authorization/assignment.md)
+
+
 ## Prerequisites
 
-Before installing and running the Home Library REST API service, ensure that the following prerequisites are met:
-
-#### Using Docker
-- [Docker](https://www.docker.com/) CLI
-- [Docker Scout](https://docs.docker.com/scout/install/) (optional: to scan images for vulnerabilities)
+Before installing and running the application ensure that the following prerequisites are met:
 
 #### Local Machine Environment
 - [Node.js](https://nodejs.org/en/download/) with [npm](https://www.npmjs.com/)
 - [PostgreSQL](https://www.postgresql.org/download/)
 
+#### Using Docker
+- [Docker](https://www.docker.com/) CLI
+- [Docker Scout](https://docs.docker.com/scout/install/) (optional: to scan images for vulnerabilities)
 
-## Environment Configuration
-
-|  Name    |  Default value  |   Description   |
-| ---- | ---- | ---- |
-| `PORT`    |  `4000`   |   port on which the application will listen for incoming requests   |
-| `NODE_ENV`    |   `development`   |   mode for the application (development or production).   |
-| `POSTGRES_HOST`    |   `localhost`   |  hostname of the PostgreSQL database   |
-| `POSTGRES_PORT`    |   `5432`   |   port of the PostgreSQL database   |
-| `POSTGRES_DB`    |  -  |   name of the PostgreSQL database   |
-| `POSTGRES_USER`    |   -   |   user of the PostgreSQL database   |
-| `POSTGRES_PASSWORD`    |  -  |   password of the PostgreSQL database   |
-| `POSTGRES_LOG_DIR`    |   `/var/log/postgres`   |   the directory for storing PostgreSQL log files (**only for the Docker ENV**)   |
-| `LOG_LEVEL`    |  `warn`  |   Nest.js logging level   |
-| `LOG_FILE_SIZE`    |  `32`  |   max size of the log file in `kB`   |
-| `CRYPT_SALT`    |  -  |      |
-| `JWT_SECRET_KEY`    |  -  |      |
-| `JWT_SECRET_REFRESH_KEY`    |  -  |     |
-| `TOKEN_EXPIRE_TIME`    |  `1h`  |      |
-| `TOKEN_REFRESH_EXPIRE_TIME`    |  `24h`  |      |
 
 ## How to use
 
@@ -155,6 +141,26 @@ npm run typeorm:generate <name>
 #run
 npm run typeorm:migrate
 ```
+
+## Environment Configuration
+
+|  Name    |  Default value  |   Description   |
+| ---- | ---- | ---- |
+| `PORT`    |  `4000`   |   port on which the application will listen for incoming requests   |
+| `NODE_ENV`    |   `development`   |   mode for the application (development or production).   |
+| `POSTGRES_HOST`    |   `localhost`   |  hostname of the PostgreSQL database   |
+| `POSTGRES_PORT`    |   `5432`   |   port of the PostgreSQL database   |
+| `POSTGRES_DB`    |  -  |   name of the PostgreSQL database   |
+| `POSTGRES_USER`    |   -   |   user of the PostgreSQL database   |
+| `POSTGRES_PASSWORD`    |  -  |   password of the PostgreSQL database   |
+| `POSTGRES_LOG_DIR`    |   `/var/log/postgres`   |   the directory for storing PostgreSQL log files (**only for the Docker ENV**)   |
+| `LOG_LEVEL`    |  `warn`  |   Nest.js logging level   |
+| `LOG_FILE_SIZE`    |  `32`  |   max size of the log file in `kB`   |
+| `CRYPT_SALT`    |  -  |      |
+| `JWT_SECRET_KEY`    |  -  |      |
+| `JWT_SECRET_REFRESH_KEY`    |  -  |     |
+| `TOKEN_EXPIRE_TIME`    |  `1h`  |      |
+| `TOKEN_REFRESH_EXPIRE_TIME`    |  `24h`  |      |
 
 
 ## Vulnerabilities Testing using Docker Scout
