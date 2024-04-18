@@ -31,7 +31,13 @@ Before installing and running the Home Library REST API service, ensure that the
 | `POSTGRES_USER`    |   -   |   user of the PostgreSQL database   |
 | `POSTGRES_PASSWORD`    |  -  |   password of the PostgreSQL database   |
 | `POSTGRES_LOG_DIR`    |   `/var/log/postgres`   |   the directory for storing PostgreSQL log files (**only for the Docker ENV**)   |
-
+| `LOG_LEVEL`    |  `warn`  |   Nest.js logging level   |
+| `LOG_FILE_SIZE`    |  `32`  |   max size of the log file in `kB`   |
+| `CRYPT_SALT`    |  -  |      |
+| `JWT_SECRET_KEY`    |  -  |      |
+| `JWT_SECRET_REFRESH_KEY`    |  -  |     |
+| `TOKEN_EXPIRE_TIME`    |  `1h`  |      |
+| `TOKEN_REFRESH_EXPIRE_TIME`    |  `24h`  |      |
 
 ## How to use
 
@@ -45,6 +51,10 @@ export POSTGRES_HOST=home_library_service_db
 export POSTGRES_DB=database
 export POSTGRES_USER=user
 export POSTGRES_PASSWORD=password
+export LOG_LEVEL=debug
+export CRYPT_SALT=10
+export JWT_SECRET_KEY=secret123123
+export JWT_SECRET_REFRESH_KEY=secret123123
 
 # create network
 docker network create home_library_service
@@ -61,10 +71,14 @@ docker run --detach \
 # run application
 docker run --detach \
   -p 4000:4000 \
+  -e  CRYPT_SALT=$CRYPT_SALT \
+  -e JWT_SECRET_KEY=$JWT_SECRET_KEY \
+  -e JWT_SECRET_REFRESH_KEY=$JWT_SECRET_REFRESH_KEY \
   -e POSTGRES_HOST=$POSTGRES_HOST \
   -e POSTGRES_DB=$POSTGRES_DB \
   -e POSTGRES_USER=$POSTGRES_USER \
   -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+  -e LOG_LEVEL=$LOG_LEVEL \
   --network home_library_service \
   ant0x64/nodejs-service_app:latest
 ```
@@ -136,7 +150,7 @@ npm run start:prod
 
 ```bash
 # generate
-npm run typeorm:migration:generate <name>
+npm run typeorm:generate <name>
 
 #run
 npm run typeorm:migrate
@@ -173,13 +187,8 @@ docker run -it \
 
 ## Application Testing Scripts
 
-The source code includes testing scripts that can be executed from the root directory after launching the application. Simply run the command `npm test` to initiate the testing process.
+The source code includes testing scripts that can be executed from the root directory after launching the application. Simply run the command `npm test:auth` to initiate the testing process.
 
 ## Swagger Documentation
 
 Access the Swagger documentation by navigating to `http://localhost:{PORT}/doc` in your web browser, replacing `{PORT}` with your application's port number. Explore and interact with API endpoints using the Swagger UI for detailed documentation and testing capabilities.
-
-
-
-
-

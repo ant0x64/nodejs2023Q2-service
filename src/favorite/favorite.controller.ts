@@ -4,12 +4,16 @@ import {
   Post,
   Param,
   Delete,
-  UseInterceptors,
   HttpCode,
-  ClassSerializerInterceptor,
   ParseEnumPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { UUIDPipe } from 'common/pipes/uuid.pipe';
 import { FavoriteService } from './favorite.service';
@@ -22,10 +26,11 @@ enum endpoints {
   TRACK = 'track',
 }
 
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('favs')
 @ApiTags('Favorites')
+@ApiBearerAuth()
 export class FavoriteController {
+  // @todo
   protected blank_user: User['id'] = '0fa85f64-5717-4562-b3fc-2c963f66afa6';
   protected favorite: Favorite;
 

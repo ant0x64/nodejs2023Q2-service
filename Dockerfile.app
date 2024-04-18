@@ -19,4 +19,5 @@ RUN npm install -g \
 FROM node as production
 WORKDIR /app
 COPY --from=build /build ./
+RUN mkdir logs
 CMD ["npm", "run", "start:prod"]

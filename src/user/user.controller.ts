@@ -5,14 +5,18 @@ import {
   Body,
   Param,
   Delete,
-  UseInterceptors,
-  ClassSerializerInterceptor,
   HttpCode,
   NotFoundException,
   Put,
   ForbiddenException,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { UUIDPipe } from 'common/pipes/uuid.pipe';
 
@@ -23,9 +27,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 import { User } from './user.entity';
 
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 @ApiTags('Users')
+@ApiBearerAuth()
 export class UserController {
   constructor(private readonly service: UserService) {}
 
@@ -85,7 +89,7 @@ export class UserController {
     @Body() updateUserPasswordDto: UpdateUserPasswordDto,
   ) {
     const entity = await this.findOne(id);
-    if (updateUserPasswordDto.oldPassword !== entity.password) {
+    if (!(await entity.checkPassword(updateUserPasswordDto.oldPassword))) {
       throw new ForbiddenException();
     }
     return this.service.update(id, {

@@ -5,13 +5,17 @@ import {
   Body,
   Param,
   Delete,
-  UseInterceptors,
-  ClassSerializerInterceptor,
   HttpCode,
   NotFoundException,
   Put,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { UUIDPipe } from 'common/pipes/uuid.pipe';
 
@@ -21,9 +25,9 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 
 import { Track } from './track.entity';
 
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('track')
 @ApiTags('Tracks')
+@ApiBearerAuth()
 export class TrackController {
   constructor(private readonly service: TrackService) {}
 

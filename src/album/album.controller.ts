@@ -5,13 +5,17 @@ import {
   Body,
   Param,
   Delete,
-  UseInterceptors,
-  ClassSerializerInterceptor,
   HttpCode,
   NotFoundException,
   Put,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { UUIDPipe } from 'common/pipes/uuid.pipe';
 
@@ -21,9 +25,9 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 
 import { Album } from './album.entity';
 
-@ApiTags('Albums')
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('album')
+@ApiTags('Albums')
+@ApiBearerAuth()
 export class AlbumController {
   constructor(private readonly service: AlbumService) {}
 

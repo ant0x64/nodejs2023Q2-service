@@ -5,3 +5,5 @@
 !src/
 !typeorm/
 !tsconfig*.json
+!logs/
+logs/*

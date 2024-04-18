@@ -11,10 +11,6 @@ import { ArtistModule } from 'artist/artist.module';
 import { AlbumModule } from 'album/album.module';
 import { TrackModule } from 'track/track.module';
 
-import { ArtistService } from 'artist/artist.service';
-import { AlbumService } from 'album/album.service';
-import { TrackService } from 'track/track.service';
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([Favorite]),
@@ -24,20 +20,6 @@ import { TrackService } from 'track/track.service';
     TrackModule,
   ],
   controllers: [FavoriteController],
-  providers: [
-    FavoriteService,
-    {
-      useExisting: ArtistService,
-      provide: 'ArtistService',
-    },
-    {
-      useExisting: AlbumService,
-      provide: 'AlbumService',
-    },
-    {
-      useExisting: TrackService,
-      provide: 'TrackService',
-    },
-  ],
+  providers: [FavoriteService],
 })
 export class FavoriteModule {}

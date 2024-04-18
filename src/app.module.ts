@@ -1,7 +1,7 @@
-import { config } from 'dotenv';
-
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { AuthModule } from './auth/auth.module';
 
 import { UserModule } from 'user/user.module';
 import { TrackModule } from 'track/track.module';
@@ -9,10 +9,16 @@ import { ArtistModule } from 'artist/artist.module';
 import { AlbumModule } from 'album/album.module';
 import { FavoriteModule } from 'favorite/favorite.module';
 
-config();
+import { LoggingModule } from 'logging/logging.module';
+
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -28,6 +34,14 @@ config();
     ArtistModule,
     AlbumModule,
     FavoriteModule,
+    LoggingModule,
+    AuthModule,
+  ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
   ],
 })
 export class AppModule {}
