@@ -1,17 +1,27 @@
-import { config } from 'dotenv';
-
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 
-import { AppModule } from './app.module';
-import { enableSwagger } from './swagger';
+import { AppModule } from 'app.module';
+import { LoggingService } from 'logging/logging.service';
 
-config();
+import { enableSwagger } from 'swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
   enableSwagger(app);
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+
+  const logger = await app.resolve(LoggingService);
+  app.useLogger(logger);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      strictGroups: true,
+    }),
+  );
+
   await app.listen(process.env.PORT || 4000);
 }
 bootstrap();

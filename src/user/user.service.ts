@@ -1,56 +1,28 @@
+import { AbstractService } from 'common/abstract.service';
+
 import { Injectable } from '@nestjs/common';
-import { v4 as uuid } from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { User } from './user.entity';
 
-import { Subject } from 'rxjs';
+import { validate } from 'class-validator';
 
 @Injectable()
-export class UserService {
-  private items: Record<User['id'], User> = {};
-  private deleteEvent = new Subject<User['id']>();
+export class UserService extends AbstractService<User> {
+  @InjectRepository(User)
+  declare repository: Repository<User>;
 
-  public delete$ = this.deleteEvent.asObservable();
+  create(createDto: CreateUserDto) {
+    const entity = new User(createDto as User);
+    validate(entity, { forbidUnknownValues: true });
 
-  create(createUserDto: CreateUserDto): User {
-    const id = uuid();
-    const date = Date.now();
-
-    // @todo class validation
-    const user = new User({
-      ...createUserDto,
-      id,
-      version: 1,
-      createdAt: date,
-      updatedAt: date,
-    });
-
-    this.items[id] = user;
-    return user;
+    return this.repository.save(entity);
   }
 
-  findAll(): User[] {
-    return Object.values(this.items);
-  }
-
-  findOne(id: User['id']): User | undefined {
-    return this.items[id];
-  }
-
-  update(id: User['id'], updateUserDto: UpdateUserDto) {
-    const user = this.findOne(id);
-    if (user) {
-      Object.assign(user, updateUserDto);
-      user.updatedAt = Date.now();
-      user.version++;
-    }
-
-    return user;
-  }
-
-  remove(id: User['id']): boolean {
-    return this.items[id] && delete this.items[id];
+  findByLogin(login: User['login']) {
+    return this.repository.findOne({ where: { login } });
   }
 }

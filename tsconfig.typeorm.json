@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["./typeorm"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": false,
+    "sourceMap": false,
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "Node",
+    "incremental": false,
+    "outDir": "./dist/typeorm",
+    "rootDir": "./typeorm",
+    "baseUrl": "./typeorm",
+  }
+}

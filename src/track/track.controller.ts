@@ -5,27 +5,31 @@ import {
   Body,
   Param,
   Delete,
-  UseInterceptors,
-  ClassSerializerInterceptor,
   HttpCode,
   NotFoundException,
   Put,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
-import { UUIDPipe } from 'src/common/pipes/uuid.pipe';
+import { UUIDPipe } from 'common/pipes/uuid.pipe';
 
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 
-import { Track } from './entities/track.entity';
+import { Track } from './track.entity';
 
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('track')
 @ApiTags('Tracks')
+@ApiBearerAuth()
 export class TrackController {
-  constructor(private readonly trackService: TrackService) {}
+  constructor(private readonly service: TrackService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create track' })
@@ -39,14 +43,14 @@ export class TrackController {
     description: 'Does not contain required fields',
   })
   create(@Body() createTrackDto: CreateTrackDto) {
-    return this.trackService.create(createTrackDto);
+    return this.service.create(createTrackDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all tracks' })
   @ApiResponse({ status: 200, type: [Track] })
   findAll() {
-    return this.trackService.findAll();
+    return this.service.findAll();
   }
 
   @Get(':id')
@@ -59,12 +63,12 @@ export class TrackController {
   @ApiResponse({ status: 200, type: Track })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'Track not found' })
-  findOne(@Param('id', UUIDPipe) id: string) {
-    const track = this.trackService.findOne(id);
-    if (!track) {
+  async findOne(@Param('id', UUIDPipe) id: string) {
+    const entity = await this.service.findOne(id);
+    if (!entity) {
       throw new NotFoundException();
     }
-    return track;
+    return entity;
   }
 
   @Put(':id')
@@ -77,12 +81,15 @@ export class TrackController {
   @ApiResponse({ status: 200, type: Track })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'Track not found' })
-  update(
+  async update(
     @Param('id', UUIDPipe) id: string,
-    @Body() updateTrackDto: UpdateTrackDto,
+    @Body() updateDto: UpdateTrackDto,
   ) {
-    this.findOne(id);
-    return this.trackService.update(id, updateTrackDto);
+    const entity = await this.service.findOne(id);
+    if (!entity) {
+      throw new NotFoundException();
+    }
+    return this.service.update(id, updateDto);
   }
 
   @Delete(':id')
@@ -96,12 +103,12 @@ export class TrackController {
   @ApiResponse({ status: 204, description: 'Successful' })
   @ApiResponse({ status: 400, description: 'ID has invalid format' })
   @ApiResponse({ status: 404, description: 'Track not found' })
-  remove(@Param('id', UUIDPipe) id: string) {
-    const track = this.trackService.findOne(id);
-    if (!track) {
+  async remove(@Param('id', UUIDPipe) id: string) {
+    const entity = await this.service.findOne(id);
+    if (!entity) {
       throw new NotFoundException();
     }
 
-    return this.trackService.remove(id);
+    return this.service.remove(id);
   }
 }

@@ -1,0 +1,9 @@
+*
+
+!nest-cli.json
+!package*.json
+!src/
+!typeorm/
+!tsconfig*.json
+!logs/
+logs/*

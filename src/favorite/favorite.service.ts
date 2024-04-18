@@ -1,90 +1,89 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
-import { v4 as uuid } from 'uuid';
+import { AbstractService } from 'common/abstract.service';
 
-import { User } from 'src/user/entities/user.entity';
-import { ArtistService } from 'src/artist/artist.service';
-import { AlbumService } from 'src/album/album.service';
-import { TrackService } from 'src/track/track.service';
-import { Favorite } from './entities/favorite.entity';
-import { Artist } from 'src/artist/entities/artist.entity';
-import { Album } from 'src/album/entities/album.entity';
-import { Track } from 'src/track/entities/track.entity';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
+import { ArtistService } from 'artist/artist.service';
+import { AlbumService } from 'album/album.service';
+import { TrackService } from 'track/track.service';
+import { Favorite } from './favorite.entity';
+
+import { validate } from 'class-validator';
 
 @Injectable()
-export class FavoriteService {
-  readonly blank_user: User['id'] = uuid();
-  private items: Record<Favorite['userId'], Favorite> = {};
+export class FavoriteService extends AbstractService<Favorite> {
+  protected services: {
+    artists: ArtistService;
+    albums: AlbumService;
+    tracks: TrackService;
+  };
 
   constructor(
-    private artistService: ArtistService,
-    private albumService: AlbumService,
-    private trackService: TrackService,
+    @InjectRepository(Favorite)
+    repository: Repository<Favorite>,
+    artistService: ArtistService,
+    albumService: AlbumService,
+    trackService: TrackService,
   ) {
-    this.items[this.blank_user] = new Favorite();
-
-    this.artistService.delete$.subscribe((id) => {
-      Object.values(this.items).forEach((favorite) => {
-        delete favorite.artists[id];
-      });
-    });
-    this.albumService.delete$.subscribe((id) => {
-      Object.values(this.items).forEach((favorite) => {
-        delete favorite.albums[id];
-      });
-    });
-    this.trackService.delete$.subscribe((id) => {
-      Object.values(this.items).forEach((favorite) => {
-        delete favorite.tracks[id];
-      });
-    });
+    super(repository);
+    this.services = {
+      artists: artistService,
+      albums: albumService,
+      tracks: trackService,
+    };
   }
 
-  findAll() {
-    return this.items[this.blank_user];
+  create(createDto: Partial<Favorite>) {
+    const entity = new Favorite({
+      artists: [],
+      albums: [],
+      tracks: [],
+      ...createDto,
+    });
+    validate(entity, { forbidUnknownValues: true });
+
+    return this.repository.save(entity);
   }
 
-  addArtist(id: Artist['id']) {
-    const artist = this.artistService.findOne(id);
-    if (!artist) {
-      throw new UnprocessableEntityException();
-    }
-    this.items[this.blank_user].artists[id] = artist;
-  }
-
-  removeArtist(id: Artist['id']) {
+  async findByUser(userId: Favorite['userId']): Promise<Favorite> {
     return (
-      this.items[this.blank_user].artists[id] &&
-      delete this.items[this.blank_user].artists[id]
+      (await this.repository.findOne({
+        where: { userId },
+      })) || (await this.create({ userId }))
     );
   }
 
-  addAlbum(id: Album['id']) {
-    const album = this.albumService.findOne(id);
-    if (!album) {
+  async add(
+    fav: Favorite,
+    entity: keyof FavoriteService['services'],
+    id: string,
+  ) {
+    const item = await this.services[entity].findOne(id);
+    if (!item) {
       throw new UnprocessableEntityException();
     }
-    this.items[this.blank_user].albums[id] = album;
+
+    if (!fav[entity]) {
+      fav[entity] = [];
+    }
+
+    (fav[entity] as (typeof item)[]).push(item);
+    return this.repository.save(fav);
   }
 
-  removeAlbum(id: Album['id']) {
-    return (
-      this.items[this.blank_user].albums[id] &&
-      delete this.items[this.blank_user].albums[id]
-    );
-  }
-
-  addTrack(id: Track['id']) {
-    const track = this.trackService.findOne(id);
-    if (!track) {
+  async delete(
+    fav: Favorite,
+    entity: keyof FavoriteService['services'],
+    id: string,
+  ) {
+    const index = fav[entity].findIndex((entity) => entity.id === id);
+    if (index === -1) {
       throw new UnprocessableEntityException();
     }
-    this.items[this.blank_user].tracks[id] = track;
-  }
+    fav[entity].splice(index, 1);
 
-  removeTrack(id: Track['id']) {
-    return (
-      this.items[this.blank_user].tracks[id] &&
-      delete this.items[this.blank_user].tracks[id]
-    );
+    return this.repository.save(fav);
   }
 }
